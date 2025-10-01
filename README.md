@@ -127,11 +127,15 @@ ExerciseDB has a rate limit of 1000 requests per hour. Since ExerciseDB’s data
 ## Authentication and Security
 
 **Q5: What authentication method will you use (e.g., username/password, OAuth, JWT)?**
+We will be using username/password and Firebase as our authentication method.
 
 **Q6: How will you store and protect sensitive user data (e.g., passwords, tokens)?**
+With the use of Firebase, we would be able to store and protect user sensitive data like passwords and tokens. Our team has experience with using Firebase so it felt like the best option. Sensitive user info (passwords, tokens) will never be stored in the database, and only handled securely by Firebase, so we hope that it will be reliable and an effective way to store and protect sensitive user data. The backend will verify the password or token before allowing access to PostgreSQL for workout logging, progress charts, and social features.
 
 ## Deployment
 
 **Q7: Where will you deploy your project (e.g., Heroku, AWS, Render)? How will you manage environment variables and secrets during deployment?**
+We plan on using Render to deploy our project and also use it to manage environment variables and secrets during deployment. Render can automatically update the live app whenever we push changes to GitHub. In terms of sensitive info, we will use Render’s environment variables to keep them safe and separate from our code.
 
 **Q8: How will you ensure your deployment is reliable and easy to update?**
+We will use Render's feature of being able to automatically deploy from Git and also implement health checks. Any changes we push to GitHub will update the live app. We will also test the app regularly to make sure everything works. PostgreSQL backups and monitoring will help prevent data loss and keep the app running smoothly. This makes the app reliable and easy to update as well as maintain.
