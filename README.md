@@ -139,3 +139,20 @@ We plan on using Render to deploy our project and also use it to manage environm
 
 **Q8: How will you ensure your deployment is reliable and easy to update?**
 We will use Render's feature of being able to automatically deploy from Git and also implement health checks. Any changes we push to GitHub will update the live app. We will also test the app regularly to make sure everything works. PostgreSQL backups and monitoring will help prevent data loss and keep the app running smoothly. This makes the app reliable and easy to update as well as maintain.
+
+## Meetings
+
+**Week 1: Thursday, Oct. 9**
+Today the group finalized our ideas for the group project, including the exact features that we are going to include in our application and specifically what each of those features will entail. We settled on having the following main pages:
+Login Page: This will be the first page the user sees when opening our application. They will be able to log in or create a new account here.
+Progress Page: This will be the main page of our program upon the user logging in. They will be able to see a graphical display of their PRs per workout.
+Workout Page: This will be a separate page that will allow the user to log their workout for the day.
+Messages Page: This will allow UIC students to connect with other UIC students by direct message and discuss their fitness goals, and schedule times to meet and work in with others.
+Communities Page: This will allow UIC students to connect with groups of UIC students that share common fitness goals and create posts about their progress, similar to how Twitter's communities feature works.
+We also finalized our roles today, and for the next meeting we established a goal to have the data structures we will use to be finalized as well as the Figma portion of the project.
+
+**Week 2: Thursday, Oct. 16**
+Today the group made some changes on the ideas for our project. First of all, the following modifications were made to our page ideas upon more discussion:
+Progress Page: We specified that the user will be able to display their lifting progress by past 3 days, past 7 days, past month, and all-time. Additionally, they will be able to select whether their graphical data is shown by PR per workout or total volume lifted for that exercise. Furthermore, they may also want to know their total volume lifted for the total day in the gym and compare it to past results, so they will be allowed to do this as well.
+Communities Page: We decided to modify slightly the way this page works, and in order to keep the entire application related to fitness content only, we will make it so that this page works as a forum regarding various topics that the user can post in. For example, there will be one for milestones or goals reached, meal prepping and diet and wellness, form tips, and another topic to post their routines for certain muscle groups.
+We also continued working on the Figma project, and we finalized which pages should be worked on in Figma by each group member to keep everything as organized and structured as possible. For our next meeting, we want to have an application skeleton working, meaning that all pages have been set up and are able to be reached by the user. From there, we will continue working on both frontend and backend components based on our assigned roles, specifically expanding the data structure implementations in the backend and continuing adding text fields, input buttons, and such in the frontend.
