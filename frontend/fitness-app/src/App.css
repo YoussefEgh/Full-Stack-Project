@@ -1,42 +1,135 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+/* Full page layout */
+body, html, #root {
+  height: 100%;
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: black;
+  color: white;
+}
+
+/* Centering container */
+.login-container {
+  position: fixed;              /* Ensures it fills the screen */
+  top: 0;
+  left: 0;
+  width: 100%;                  /* Full width */
+  height: 100%;                 /* Full height */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;      /* Center vertically */
+  align-items: center;          /* Center horizontally */
   text-align: center;
+  box-sizing: border-box;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+/* Inner content */
+.login-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;     /* Center horizontally */
+  justify-content: center; /* Center vertically */
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* Icon */
+.icon {
+  width: 70px;
+  height: 70px;
+  border: 2px solid white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  margin: 0 auto;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+.icon-label {
+  color: gray;
+  font-size: 14px;
+  margin-top: 8px;
 }
 
-.card {
-  padding: 2em;
+/* Title */
+.app-title {
+  font-size: 28px;
+  font-weight: bold;
+  margin: 20px 0 30px;
 }
 
-.read-the-docs {
-  color: #888;
+/* Login card */
+.login-card {
+  background-color: #111;
+  border: 1px solid #333;
+  border-radius: 10px;
+  width: 300px;
+  padding: 25px;
+  text-align: left;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.login-card label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 14px;
+  color: #ccc;
+}
+
+.login-card input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 6px;
+  border: 1px solid #444;
+  background-color: #000;
+  color: white;
+  font-size: 14px;
+}
+
+.login-card input:focus {
+  outline: none;
+  border-color: white;
+}
+
+/* Sign in button */
+.login-card button {
+  width: 100%;
+  background-color: white;
+  color: black;
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.login-card button:hover {
+  background-color: #ddd;
+}
+
+/* Forgot password link */
+.forgot-password {
+  display: block;
+  text-align: center;
+  margin-top: 10px;
+  font-size: 13px;
+  color: #bbb;
+  text-decoration: none;
+}
+
+.forgot-password:hover {
+  text-decoration: underline;
+}
+
+/* Footer */
+.footer {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  font-size: 13px;
+  color: #666;
+  white-space: nowrap;
 }
