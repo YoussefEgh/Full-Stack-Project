@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import { BrowserRouter as Router, Routes, Route, useNavigate } from "react-router-dom";
 import "./App.css";
 import Settings from "./pages/Settings.jsx";
+import Progress from "./pages/Progress.jsx";
+import Workouts from "./pages/Workouts.jsx";
+import SettingsContainer from "./pages/SettingsContainer.jsx";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -14,7 +17,7 @@ function Login() {
     console.log("Password:", password);
 
     // Redirect to settings page
-    navigate("/settings");
+    navigate("/progress");
   };
 
   return (
@@ -25,7 +28,7 @@ function Login() {
         <h1 className="app-title">Sign In</h1>
 
         <form className="login-card" onSubmit={handleSubmit}>
-          <label>Email</label>
+          <label>Your Email</label>
           <input
             type="email"
             placeholder="Value"
@@ -33,7 +36,7 @@ function Login() {
             onChange={(e) => setEmail(e.target.value)}
           />
 
-          <label>Password</label>
+          <label>Your Password</label>
           <input
             type="password"
             placeholder="Value"
@@ -42,7 +45,7 @@ function Login() {
           />
 
           <button type="submit">Sign In</button>
-          <a href="#" className="forgot-password">Forgot password?</a>
+          <a href="/progress" className="forgot-password">Forgot password?</a>
         </form>
       </div>
 
@@ -58,7 +61,9 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<Login />} />
-        <Route path="/settings" element={<Settings />} />
+        <Route path="/settings" element={<SettingsContainer />} />
+        <Route path="/progress" element={<Progress />} />
+        <Route path="/workouts" element={<Workouts />} />
       </Routes>
     </Router>
   );
