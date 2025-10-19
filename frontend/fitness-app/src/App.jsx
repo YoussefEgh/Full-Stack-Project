@@ -24,14 +24,14 @@ function Login() {
     <div className="login-container">
       <div className="login-content">
         <div className="icon">🌐</div>
-        <p className="icon-label">[App icon here]</p>
+        <p className="icon-label">Lock in today.</p>
         <h1 className="app-title">Sign In</h1>
 
         <form className="login-card" onSubmit={handleSubmit}>
           <label>Your Email</label>
           <input
             type="email"
-            placeholder="Value"
+            placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
@@ -39,7 +39,7 @@ function Login() {
           <label>Your Password</label>
           <input
             type="password"
-            placeholder="Value"
+            placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />

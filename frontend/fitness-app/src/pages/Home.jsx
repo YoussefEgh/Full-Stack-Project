@@ -1,6 +1,6 @@
 import React from "react";
 
-function Settings() {
+function Home() {
   return (
     <div style={{ 
       display: "flex",
@@ -11,10 +11,10 @@ function Settings() {
       backgroundColor: "black",
       color: "white"
     }}>
-      <h1>Settingssdsds</h1>
-      <p>Welcome to your settings page!</p>
+      <h1>Home</h1>
+      <p>Welcome to your home page!</p>
     </div>
   );
 }
 
-export default Settings;
+export default Home;
