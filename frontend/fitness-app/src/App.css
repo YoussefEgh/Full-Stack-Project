@@ -95,6 +95,7 @@ body {
   background-color: #000;
   color: white;
   font-size: 14px;
+  box-sizing: border-box;
 }
 
 .login-card input:focus {
@@ -104,6 +105,7 @@ body {
 
 /* Sign in button */
 .login-card button {
+  box-sizing: border-box;
   width: 100%;
   background-color: white;
   color: black;
