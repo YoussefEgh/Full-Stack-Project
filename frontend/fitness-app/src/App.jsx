@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { BrowserRouter as Router, Routes, Route, useNavigate } from "react-router-dom";
 import "./App.css";
-import Settings from "./pages/Settings.jsx";
+import Home from "./pages/Home.jsx";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -13,22 +13,22 @@ function Login() {
     console.log("Email:", email);
     console.log("Password:", password);
 
-    // Redirect to settings page
-    navigate("/settings");
+    // Redirect to home page
+    navigate("/home");
   };
 
   return (
     <div className="login-container">
       <div className="login-content">
         <div className="icon">🌐</div>
-        <p className="icon-label">[App icon here]</p>
+        <p className="icon-label">Lock in today.</p>
         <h1 className="app-title">Sign In</h1>
 
         <form className="login-card" onSubmit={handleSubmit}>
           <label>Email</label>
           <input
             type="email"
-            placeholder="Value"
+            placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
@@ -36,12 +36,14 @@ function Login() {
           <label>Password</label>
           <input
             type="password"
-            placeholder="Value"
+            placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
 
           <button type="submit">Sign In</button>
+
+          {/* <button type="submit">Register</button> TODO*/}
           <a href="#" className="forgot-password">Forgot password?</a>
         </form>
       </div>
@@ -58,7 +60,7 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<Login />} />
-        <Route path="/settings" element={<Settings />} />
+        <Route path="/home" element={<Home />} />
       </Routes>
     </Router>
   );
