@@ -22,6 +22,11 @@ body, html, #root {
   box-sizing: border-box;
 }
 
+body {
+  overflow-x: hidden;
+  margin: 0; /* also remove default body margin */
+}
+
 /* Inner content */
 .login-content {
   display: flex;
@@ -66,6 +71,9 @@ body, html, #root {
   text-align: left;
   margin: 0 auto;
   box-sizing: border-box;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
 }
 
 .login-card label {
@@ -73,6 +81,9 @@ body, html, #root {
   margin-bottom: 5px;
   font-size: 14px;
   color: #ccc;
+  
+  
+  margin-left: "5px"; 
 }
 
 .login-card input {
