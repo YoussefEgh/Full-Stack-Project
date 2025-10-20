@@ -9,8 +9,7 @@ def login_view(request):
         email = data.get("email")
         password = data.get("password")
 
-        # Simple example logic (replace with your auth system)
-        if email == "test@example.com" and password == "123":
+        if email == "test@gmail.com" and password == "123":
             return JsonResponse({"success": True, "message": "Login successful"})
         else:
             return JsonResponse({"success": False, "message": "Invalid credentials"})
