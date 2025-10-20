@@ -11,14 +11,28 @@ function Login() {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Email:", email);
-    console.log("Password:", password);
+const handleSubmit = (e) => {
+  e.preventDefault();
 
-    // Redirect to settings page
-    navigate("/progress");
-  };
+  fetch("http://127.0.0.1:8000/api/login/", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password })
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      if (data.success) {
+        navigate("/settings"); // redirect if login successful
+      } else {
+        alert(data.message); // show error from Django
+      }
+    })
+    .catch((err) => {
+      console.error("Error:", err);
+    });
+
+  navigate("/progress");
+};
 
   return (
     <div className="login-container">
