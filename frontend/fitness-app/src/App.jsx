@@ -31,7 +31,7 @@ const handleSubmit = (e) => {
       console.error("Error:", err);
     });
 
-  navigate("/progress");
+  //navigate("/progress");
 };
 
   return (
