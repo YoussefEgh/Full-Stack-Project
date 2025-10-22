@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { BrowserRouter as Router, Routes, Route, useNavigate } from "react-router-dom";
 import "./App.css";
 import Settings from "./pages/Settings.jsx";
+import Communities from "./pages/Communities.jsx";
 import Progress from "./pages/Progress.jsx";
 import Workouts from "./pages/Workouts.jsx";
 import SettingsContainer from "./pages/SettingsContainer.jsx";
@@ -78,6 +79,7 @@ function App() {
         <Route path="/settings" element={<SettingsContainer />} />
         <Route path="/progress" element={<Progress />} />
         <Route path="/workouts" element={<Workouts />} />
+        <Route path="/communities" element={<Communities />} />
       </Routes>
     </Router>
   );
