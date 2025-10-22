@@ -20,7 +20,7 @@ def workout_progress_list(request):
                 'weight': wp.weight,
                 'reps': wp.reps,
                 'sets': wp.sets,
-                'created_at': wp.created_at,
+                'created_at': wp.created_at.isoformat() if wp.created_at else None,
                 'intensity': intensity,
             }
             # use negative intensity for max-heap
@@ -56,7 +56,7 @@ def workout_progress_detail(request, pk):
             'weight': wp.weight,
             'reps': wp.reps,
             'sets': wp.sets,
-            'created_at': wp.created_at
+            'created_at': wp.created_at.isoformat() if wp.created_at else None
         })
     elif request.method == 'PUT':
         data = json.loads(request.body)

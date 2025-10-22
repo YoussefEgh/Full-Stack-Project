@@ -18,7 +18,7 @@ const ProgressContent = () => {
       })
       .then((data) => {
         // Server returns workouts ordered by intensity; use directly
-        setProgressData(data);
+        setProgressData(Array.isArray(data) ? data : []);
         setLoading(false);
       })
       .catch((err) => {
@@ -74,7 +74,7 @@ const ProgressContent = () => {
           .then((res) => res.json())
           .then((data) => {
             // Server returns workouts ordered by intensity; use directly
-            setProgressData(data);
+            setProgressData(Array.isArray(data) ? data : []);
             setLoading(false);
           });
       })
@@ -95,7 +95,7 @@ const ProgressContent = () => {
       })
       .then((res) => res.json())
       .then((data) => {
-        setProgressData(data);
+        setProgressData(Array.isArray(data) ? data : []);
         setLoading(false);
       })
       .catch((err) => {
