@@ -2,18 +2,21 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from .models import WorkoutProgress
 import json
-import heapq
+from config.data_structures.priority_queue import PriorityQueue
 
 @csrf_exempt
 def workout_progress_list(request):
     if request.method == 'GET':
-        # Server-side priority queue (max-heap) based on workout intensity = weight * reps * sets
-        heap = []
+        # Server-side priority queue using custom PriorityQueue class
+        # Priority based on workout intensity = weight * reps * sets
+        pq = PriorityQueue()
+        
         for wp in WorkoutProgress.objects.all():
             try:
-                intensity = float(wp.weight) * int(wp.reps) * int(wp.sets)
+                intensity = int(float(wp.weight) * int(wp.reps) * int(wp.sets))
             except Exception:
-                intensity = 0.0
+                intensity = 0
+            
             payload = {
                 'id': wp.id,
                 'name': wp.name,
@@ -23,12 +26,13 @@ def workout_progress_list(request):
                 'created_at': wp.created_at.isoformat() if wp.created_at else None,
                 'intensity': intensity,
             }
-            # use negative intensity for max-heap
-            heapq.heappush(heap, (-intensity, wp.id, payload))
+            # Push to priority queue with intensity as priority (higher = better)
+            pq.push(payload, intensity)
 
+        # Pop items from priority queue in descending order of intensity
         ordered = []
-        while heap:
-            _, _, payload = heapq.heappop(heap)
+        while not pq.is_empty():
+            priority, payload = pq.pop()
             ordered.append(payload)
 
         return JsonResponse(ordered, safe=False)
