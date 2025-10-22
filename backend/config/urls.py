@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 from config.views import (
     login_view,
     progress_view,
@@ -11,6 +11,9 @@ from config.views import (
 urlpatterns = [
     path('api/login/', login_view),
     path('api/progress/', progress_view),
+    
+    # Progress app with edit/delete endpoints
+    path('api/', include('progress.urls')),
 
     # Priority queue endpoints
     path('api/queue/enqueue/', queue_enqueue),
