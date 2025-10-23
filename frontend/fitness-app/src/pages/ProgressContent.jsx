@@ -113,7 +113,7 @@ const ProgressContent = () => {
       padding: "45px 0",
       boxSizing: "border-box"
     }}>
-      <h1 style={{ padding: "0 35px" }}>Your Progress</h1>
+      <h1 style={{ padding: "0 35px" }}>🏋️ Your Progress</h1>
       <h3 style={{ color: "#aaa", padding: "0 45px" }}>Track your gains!</h3>
 
       <form onSubmit={handleSubmit} style={{
