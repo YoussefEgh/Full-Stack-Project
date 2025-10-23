@@ -3,10 +3,12 @@ import { BrowserRouter as Router, Routes, Route, useNavigate } from "react-route
 import "./App.css";
 import Settings from "./pages/Settings.jsx";
 import Communities from "./pages/Communities.jsx";
+import CommunitiesContent from "./pages/CommunitiesContent.jsx";
 import Messages from "./pages/Messages.jsx";
 import Progress from "./pages/Progress.jsx";
 import Workouts from "./pages/Workouts.jsx";
 import SettingsContainer from "./pages/SettingsContainer.jsx";
+import PostDetail from "./pages/PostDetail.jsx";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -82,6 +84,8 @@ function App() {
         <Route path="/workouts" element={<Workouts />} />
         <Route path="/communities" element={<Communities />} />
         <Route path="/messages" element={<Messages />} />
+        <Route path="/post/:id" element={<Communities />} />
+
       </Routes>
     </Router>
   );
