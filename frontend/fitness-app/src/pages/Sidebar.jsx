@@ -22,7 +22,7 @@ const Sidebar = () => {
   return (
     <div style={{ width: "250px", backgroundColor: "#111", color: "#fff", padding: "20px" }}>
       <div style={{ marginBottom: "30px", fontSize: "24px", textAlign: "center" }}>
-        [App icon here]
+        <img style={{ width: "175px", height: "175px" }} src="/momentum_logo.png" alt="Logo" />
       </div>
       {menuItems.map((item, index) => {
         const isHovered = hoveredIndex === index;

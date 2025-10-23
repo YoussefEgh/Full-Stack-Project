@@ -50,7 +50,7 @@ function SettingsContainer() {
         overflowY: "auto",
       }}
     >
-      <h1 style={{ marginBottom: "30px" }}>Settings</h1>
+      <h1 style={{ marginBottom: "30px" }}>⚙️ Settings</h1>
 
       {/* --- PROFILE MANAGEMENT --- */}
       <section style={sectionStyle}>

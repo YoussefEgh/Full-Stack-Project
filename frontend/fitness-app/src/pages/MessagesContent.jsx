@@ -10,7 +10,7 @@ function MessagesContent() {
         padding: "40px",
       }}
     >
-      <h1>Messages</h1>
+      <h1>💬 Messages</h1>
       <p>Welcome to the messages page! (content coming soon)</p>
     </div>
   );
