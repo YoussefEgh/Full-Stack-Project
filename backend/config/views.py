@@ -9,25 +9,6 @@ from .data_structures.priority_queue import PriorityQueue
 # module-level singleton queue (simple stateful store for dev/testing)
 PRIORITY_QUEUE = PriorityQueue()
 
-@csrf_exempt
-def login_view(request):
-    if request.method == "POST":
-        try:
-            data = json.loads(request.body)
-        except Exception:
-            return JsonResponse({"success": False, "message": "Invalid JSON"}, status=400)
-
-        email = data.get("email")
-        password = data.get("password")
-
-        if email == "test@gmail.com" and password == "123":
-            return JsonResponse({"success": True, "message": "Login successful"})
-        else:
-            return JsonResponse({"success": False, "message": "Invalid credentials"})
-
-    return JsonResponse({"error": "POST required"}, status=400)
-
-
 def progress_view(request):
     # For now, static/mock data
     progress_data = {
