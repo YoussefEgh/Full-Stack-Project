@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { AiOutlineLike, AiFillLike } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 
 function CommunitiesContent() {
   const navigate = useNavigate();
+  const { idToken } = useAuth();
   const [sortBy, setSortBy] = useState("date"); // "date" or "likes"
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -11,12 +13,22 @@ function CommunitiesContent() {
 
   useEffect(() => {
     fetchPosts();
-  }, [sortBy]);
+  }, [sortBy, idToken]);
 
   const fetchPosts = async () => {
+    if (!idToken) {
+      setError('Not authenticated');
+      setLoading(false);
+      return;
+    }
+
     try {
       setLoading(true);
-      const response = await fetch(`http://127.0.0.1:8000/api/communities/posts/?sort_by=${sortBy}`);
+      const response = await fetch(`http://127.0.0.1:8000/api/communities/posts/?sort_by=${sortBy}`, {
+        headers: {
+          'Authorization': `Bearer ${idToken}`
+        }
+      });
       if (!response.ok) {
         throw new Error('Failed to fetch posts');
       }
@@ -32,11 +44,14 @@ function CommunitiesContent() {
   };
 
   const toggleLike = async (id) => {
+    if (!idToken) return;
+
     try {
       const response = await fetch(`http://127.0.0.1:8000/api/communities/posts/${id}/like/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${idToken}`
         },
       });
       
