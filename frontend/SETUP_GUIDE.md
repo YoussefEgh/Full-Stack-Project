@@ -66,7 +66,15 @@ SECRET_KEY=your-secret-key-here
 DEBUG=True
 ```
 
-### 6. Set Firestore Security Rules
+### 6. Apply Django Migrations (first-time only)
+
+```bash
+cd backend
+source venv/bin/activate
+python manage.py migrate
+```
+
+### 7. Set Firestore Security Rules
 
 In Firebase Console → Firestore → Rules, use:
 
@@ -100,7 +108,7 @@ service cloud.firestore {
 }
 ```
 
-### 7. Run the Backend Server
+### 8. Run the Backend Server
 
 ```bash
 cd backend
@@ -197,6 +205,24 @@ python create_more_samples.py
 **"Firebase not initialized" error:**
 - Check that `.env` file has correct `FIREBASE_CREDENTIALS_PATH`
 - Verify the JSON file exists and is valid
+
+**"ModuleNotFoundError: No module named 'django'" error:**
+- Ensure your virtual environment is activated:
+  ```bash
+  source /home/piotr-brozek/repos/Full-Stack-Project/backend/venv/bin/activate
+  ```
+- Install backend dependencies:
+  ```bash
+  cd /home/piotr-brozek/repos/Full-Stack-Project/backend
+  python -m pip install --upgrade pip
+  python -m pip install -r requirements.txt
+  ```
+- Verify you're using the venv's executables:
+  ```bash
+  which python
+  which pip
+  # They should point to /home/piotr-brozek/repos/Full-Stack-Project/backend/venv/bin/
+  ```
 
 **"Port already in use" error:**
 ```bash

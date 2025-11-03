@@ -146,3 +146,47 @@ body {
   color: #666;
   white-space: nowrap;
 }
+
+/* Settings Page Styles */
+.settings-input {
+  transition: all 0.2s;
+}
+
+.settings-input:hover {
+  border-color: #555 !important;
+}
+
+.settings-input:focus {
+  border-color: #1abc9c !important;
+  box-shadow: 0 0 0 2px rgba(26, 188, 156, 0.2) !important;
+}
+
+.settings-upload-button:hover {
+  background: #252525 !important;
+  border-color: #1abc9c !important;
+}
+
+.settings-radio-label:hover {
+  border-color: #1abc9c !important;
+  background: #252525 !important;
+}
+
+.settings-export-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.4) !important;
+}
+
+.settings-delete-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(231, 76, 60, 0.4) !important;
+}
+
+.settings-save-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(26, 188, 156, 0.4) !important;
+}
+
+.settings-save-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}

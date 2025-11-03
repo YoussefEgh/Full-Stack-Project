@@ -201,7 +201,17 @@ def create_reply(post_id, user_uid, text):
     return {
         'id': reply_id,
         'user': username,
+        'user_uid': user_uid,
         'text': text,
         'created_at': reply_data['created_at'].isoformat()
     }
+
+def delete_reply(reply_id):
+    """
+    Delete a reply from Firestore
+    """
+    db = get_firestore_client()
+    reply_ref = db.collection('replies').document(reply_id)
+    reply_ref.delete()
+    return True
 

@@ -1,5 +1,6 @@
 import ExerciseCard from "./ExerciseCard";
 import { useState, useEffect } from "react";
+import { FiLoader } from "react-icons/fi";
 
 const WorkoutContent = () => {
   const [exercises, setExercises] = useState([]);
@@ -230,18 +231,37 @@ const WorkoutContent = () => {
 
       {/* Loading State */}
       {loading && (
-        <div style={{ padding: "20px 35px", textAlign: "center" }}>
-          <p style={{ color: "#aaa" }}>Loading exercises...</p>
+        <div style={{ 
+          padding: "40px 35px", 
+          display: "flex", 
+          flexDirection: "column",
+          alignItems: "center",
+          gap: "20px"
+        }}>
+          <FiLoader 
+            style={{
+              fontSize: "48px",
+              color: "#00bfff",
+              animation: "spin 1s linear infinite",
+            }}
+          />
+          <p style={{ color: "#aaa", margin: 0 }}>Loading exercises...</p>
+          <style>
+            {`
+              @keyframes spin {
+                from {
+                  transform: rotate(0deg);
+                }
+                to {
+                  transform: rotate(360deg);
+                }
+              }
+            `}
+          </style>
         </div>
       )}
 
-      {/* Error State */}
-      {error && (
-        <div style={{ padding: "20px 35px", backgroundColor: "#444", margin: "0 20px", borderRadius: "8px" }}>
-          <p style={{ color: "#ff6b6b" }}>Error: {error}</p>
-          <p style={{ color: "#aaa", fontSize: "14px" }}>Showing fallback data. Please check your RapidAPI key configuration.</p>
-        </div>
-      )}
+
 
       {/* Exercises Grid */}
       <div style={{ 
