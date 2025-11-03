@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Firebase Test</title>
+</head>
+<body>
+    <h1>Firebase Connection Test</h1>
+    <div id="status">Checking...</div>
+    
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getAuth } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+        
+        const firebaseConfig = {
+            apiKey: "AIzaSyDuNXbI2TGpfy-EUfj29JoyJ1i_RzdQvlI",
+            authDomain: "project-b5897.firebaseapp.com",
+            projectId: "project-b5897",
+            storageBucket: "project-b5897.firebasestorage.app",
+            messagingSenderId: "910841988873",
+            appId: "1:910841988873:web:5c14621f2823ab19de35d8",
+            measurementId: "G-88WDXL448S"
+        };
+        
+        try {
+            const app = initializeApp(firebaseConfig);
+            const auth = getAuth(app);
+            document.getElementById('status').innerHTML = 
+                '<span style="color: green;">✓ Firebase initialized successfully!</span>';
+            console.log('Firebase Auth:', auth);
+        } catch (error) {
+            document.getElementById('status').innerHTML = 
+                '<span style="color: red;">✗ Error: ' + error.message + '</span>';
+            console.error('Firebase Error:', error);
+        }
+    </script>
+</body>
+</html>
+

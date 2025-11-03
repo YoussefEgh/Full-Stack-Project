@@ -1,6 +1,5 @@
 from django.urls import path, include
 from config.views import (
-    login_view,
     queue_enqueue,
     queue_dequeue,
     queue_peek,
@@ -12,7 +11,8 @@ from config.views import (
 )
 
 urlpatterns = [
-    path('api/login/', login_view),
+    # Authentication endpoints
+    path('api/auth/', include('authentication.urls')),
     
     # Progress app with edit/delete endpoints
     path('api/', include('progress.urls')),

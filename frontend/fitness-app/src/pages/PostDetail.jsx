@@ -1,15 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { AiOutlineLike, AiFillLike } from "react-icons/ai";
+import { AiOutlineDelete } from "react-icons/ai";
+import { useAuth } from "../contexts/AuthContext";
 
 function PostDetail() {
   const { state } = useLocation();
   const navigate = useNavigate();
   const { id } = useParams();
+  const { idToken, user } = useAuth();
   const [newReply, setNewReply] = useState("");
   const [post, setPost] = useState(state?.post);
   const [loading, setLoading] = useState(!state?.post);
   const [error, setError] = useState(null);
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     if (!state?.post && id) {
@@ -20,7 +24,13 @@ function PostDetail() {
   const fetchPost = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`http://127.0.0.1:8000/api/communities/posts/${id}/`);
+      const headers = {};
+      if (idToken) {
+        headers['Authorization'] = `Bearer ${idToken}`;
+      }
+      const response = await fetch(`http://127.0.0.1:8000/api/communities/posts/${id}/`, {
+        headers
+      });
       if (!response.ok) {
         throw new Error('Failed to fetch post');
       }
@@ -42,7 +52,6 @@ function PostDetail() {
           flex: 1,
           backgroundColor: "#333",
           color: "#fff",
-          padding: "40px",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
@@ -60,7 +69,6 @@ function PostDetail() {
           flex: 1,
           backgroundColor: "#333",
           color: "#fff",
-          padding: "40px",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
@@ -92,11 +100,9 @@ function PostDetail() {
           flex: 1,
           backgroundColor: "#333",
           color: "#fff",
-          padding: "40px",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          width: "100vw"
         }}
       >
         <p>Post not found.</p>
@@ -106,15 +112,19 @@ function PostDetail() {
 
   const handleReply = async (e) => {
     e.preventDefault();
+    if (!idToken) {
+      alert('Please login to reply');
+      return;
+    }
     if (newReply.trim()) {
       try {
         const response = await fetch(`http://127.0.0.1:8000/api/communities/posts/${post.id}/replies/`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${idToken}`,
           },
           body: JSON.stringify({
-            user: "You", // In a real app, this would be the logged-in user
             text: newReply.trim(),
           }),
         });
@@ -123,13 +133,73 @@ function PostDetail() {
           const replyData = await response.json();
           setPost(prev => ({
             ...prev,
-            replies: [...prev.replies, replyData]
+            replies: [...(prev.replies || []), replyData]
           }));
           setNewReply("");
+        } else {
+          const errorData = await response.json();
+          alert(errorData.error || 'Failed to post reply');
         }
       } catch (err) {
         console.error('Error posting reply:', err);
+        alert('Error posting reply. Please try again.');
       }
+    }
+  };
+
+  const handleDeletePost = async () => {
+    if (!window.confirm('Are you sure you want to delete this post? This action cannot be undone.')) {
+      return;
+    }
+    
+    try {
+      setDeleting(true);
+      const response = await fetch(`http://127.0.0.1:8000/api/communities/posts/${post.id}/delete/`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${idToken}`,
+        }
+      });
+      
+      if (response.ok) {
+        navigate("/communities");
+      } else {
+        const errorData = await response.json();
+        alert(errorData.error || 'Failed to delete post');
+      }
+    } catch (err) {
+      console.error('Error deleting post:', err);
+      alert('Error deleting post. Please try again.');
+    } finally {
+      setDeleting(false);
+    }
+  };
+
+  const handleDeleteReply = async (replyId) => {
+    if (!window.confirm('Are you sure you want to delete this reply?')) {
+      return;
+    }
+    
+    try {
+      const response = await fetch(`http://127.0.0.1:8000/api/communities/replies/${replyId}/delete/`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${idToken}`,
+        }
+      });
+      
+      if (response.ok) {
+        setPost(prev => ({
+          ...prev,
+          replies: prev.replies.filter(r => r.id !== replyId)
+        }));
+      } else {
+        const errorData = await response.json();
+        alert(errorData.error || 'Failed to delete reply');
+      }
+    } catch (err) {
+      console.error('Error deleting reply:', err);
+      alert('Error deleting reply. Please try again.');
     }
   };
 
@@ -156,34 +226,23 @@ function PostDetail() {
 
   return (
     <div
-    style={{
-        width: "100vw",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        height: "100vh",
-        backgroundColor: "#333",
-        color: "#fff",
-        padding: "40px",
-        overflowY: "auto",
-        width: "100vw",
-        minHeight: "30vw",
-        boxSizing: "border-box",
-    }}
-    >
-
-
-    
-    <div
       style={{
         flex: 1,
         backgroundColor: "#333",
         color: "#fff",
-        padding: "40px",
         overflowY: "auto",
-        width: "50vw",
+        display: "flex",
+        justifyContent: "center",
       }}
     >
+      <div
+        style={{
+          width: "85vw",
+          padding: "40px",
+          minHeight: "30vw",
+          boxSizing: "border-box",
+        }}
+      >
       <button
         onClick={() => navigate("/communities")}
         style={{
@@ -209,7 +268,27 @@ function PostDetail() {
           marginBottom: "20px",
         }}
       >
-        <h2 style={{ marginBottom: "5px" }}>{post.title}</h2>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start", marginBottom: "5px" }}>
+          <h2 style={{ margin: 0, flex: 1 }}>{post.title}</h2>
+          {post.author_uid === user?.uid && (
+            <button
+              onClick={handleDeletePost}
+              disabled={deleting}
+              style={{
+                backgroundColor: "transparent",
+                border: "none",
+                cursor: deleting ? "not-allowed" : "pointer",
+                color: "#ff6b6b",
+                fontSize: "20px",
+                padding: "0",
+                opacity: deleting ? 0.5 : 1,
+              }}
+              title="Delete post"
+            >
+              <AiOutlineDelete />
+            </button>
+          )}
+        </div>
         <p style={{ color: "#bbb", marginBottom: "10px" }}>
           <em>by {post.author}</em> — <span>{post.category}</span>
         </p>
@@ -256,8 +335,28 @@ function PostDetail() {
                   borderRadius: "6px",
                 }}
               >
-                <strong style={{ color: "#00bfff" }}>{reply.user}</strong>:{" "}
-                <span>{reply.text}</span>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start" }}>
+                  <div style={{ flex: 1 }}>
+                    <strong style={{ color: "#00bfff" }}>{reply.user}</strong>:{" "}
+                    <span>{reply.text}</span>
+                  </div>
+                  {reply.user_uid === user?.uid && (
+                    <button
+                      onClick={() => handleDeleteReply(reply.id)}
+                      style={{
+                        backgroundColor: "transparent",
+                        border: "none",
+                        cursor: "pointer",
+                        color: "#ff6b6b",
+                        fontSize: "18px",
+                        padding: "0 5px",
+                      }}
+                      title="Delete reply"
+                    >
+                      <AiOutlineDelete />
+                    </button>
+                  )}
+                </div>
               </div>
             ))}
           </div>
@@ -298,7 +397,7 @@ function PostDetail() {
           </button>
         </form>
       </div>
-    </div>
+      </div>
     </div>
   );
 }

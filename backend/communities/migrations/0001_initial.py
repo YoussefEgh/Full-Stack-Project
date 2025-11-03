@@ -9,6 +9,7 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
+        ('authentication', '0001_initial'),
     ]
 
     operations = [
@@ -18,7 +19,7 @@ class Migration(migrations.Migration):
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('title', models.CharField(max_length=200)),
                 ('content', models.TextField()),
-                ('author', models.CharField(max_length=100)),
+                ('author', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='posts', to='authentication.user')),
                 ('category', models.CharField(choices=[('Supplements', 'Supplements'), ('Exercises', 'Exercises'), ('Nutrition', 'Nutrition'), ('General', 'General')], default='General', max_length=20)),
                 ('likes', models.IntegerField(default=0)),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
@@ -32,7 +33,7 @@ class Migration(migrations.Migration):
             name='Reply',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('user', models.CharField(max_length=100)),
+                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='replies', to='authentication.user')),
                 ('text', models.TextField()),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('post', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='replies', to='communities.post')),

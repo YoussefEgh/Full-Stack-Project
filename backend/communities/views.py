@@ -1,133 +1,186 @@
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
-from django.db.models import Q
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 import json
-from .models import Post, Reply
+from .firebase_service import (
+    create_post,
+    get_all_posts,
+    get_post,
+    update_post,
+    delete_post,
+    like_post,
+    create_reply,
+    delete_reply
+)
+from authentication.firebase_service import verify_firebase_token
+from config.firebase import initialize_firebase
 
-@csrf_exempt
-@require_http_methods(["GET", "POST"])
+# Initialize Firebase on app startup
+initialize_firebase()
+
+@api_view(['GET', 'POST'])
+@permission_classes([IsAuthenticated])
 def post_list(request):
     if request.method == 'GET':
         sort_by = request.GET.get('sort_by', 'date')
         
-        if sort_by == 'likes':
-            posts = Post.objects.all().order_by('-likes', '-created_at')
-        else:  # default to date
-            posts = Post.objects.all().order_by('-created_at')
-        
-        posts_data = []
-        for post in posts:
-            replies_data = []
-            for reply in post.replies.all():
-                replies_data.append({
-                    'id': reply.id,
-                    'user': reply.user,
-                    'text': reply.text,
-                    'created_at': reply.created_at.isoformat()
-                })
-            
-            posts_data.append({
-                'id': post.id,
-                'title': post.title,
-                'content': post.content,
-                'author': post.author,
-                'category': post.category,
-                'likes': post.likes,
-                'created_at': post.created_at.isoformat(),
-                'updated_at': post.updated_at.isoformat(),
-                'replies': replies_data
-            })
+        posts_data = get_all_posts(sort_by=sort_by)
         
         return JsonResponse(posts_data, safe=False)
     
     elif request.method == 'POST':
         try:
+            # Verify Firebase token to get user UID
+            auth_header = request.headers.get('Authorization', '')
+            if not auth_header.startswith('Bearer '):
+                return JsonResponse({'error': 'Authorization token required'}, status=401)
+            
+            token = auth_header.split('Bearer ')[1]
+            decoded_token = verify_firebase_token(token)
+            
+            if not decoded_token:
+                return JsonResponse({'error': 'Invalid token'}, status=401)
+            
+            user_uid = decoded_token['uid']
+            
             data = json.loads(request.body)
-            post = Post.objects.create(
+            post = create_post(
                 title=data['title'],
                 content=data['content'],
-                author=data['author'],
+                author_uid=user_uid,
                 category=data.get('category', 'General')
             )
-            return JsonResponse({'id': post.id, 'message': 'Post created successfully'}, status=201)
+            return JsonResponse({'id': post['id'], 'message': 'Post created successfully'}, status=201)
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=400)
 
-@csrf_exempt
-@require_http_methods(["GET", "PUT", "DELETE"])
+@api_view(['GET', 'PUT', 'DELETE'])
+@permission_classes([IsAuthenticated])
 def post_detail(request, pk):
-    try:
-        post = Post.objects.get(pk=pk)
-    except Post.DoesNotExist:
+    post = get_post(pk)
+    
+    if not post:
         return JsonResponse({'error': 'Post not found'}, status=404)
     
     if request.method == 'GET':
-        replies_data = []
-        for reply in post.replies.all():
-            replies_data.append({
-                'id': reply.id,
-                'user': reply.user,
-                'text': reply.text,
-                'created_at': reply.created_at.isoformat()
-            })
-        
-        post_data = {
-            'id': post.id,
-            'title': post.title,
-            'content': post.content,
-            'author': post.author,
-            'category': post.category,
-            'likes': post.likes,
-            'created_at': post.created_at.isoformat(),
-            'updated_at': post.updated_at.isoformat(),
-            'replies': replies_data
-        }
-        return JsonResponse(post_data)
+        return JsonResponse(post)
     
     elif request.method == 'PUT':
         try:
             data = json.loads(request.body)
-            post.title = data.get('title', post.title)
-            post.content = data.get('content', post.content)
-            post.save()
+            updated_post = update_post(
+                post_id=pk,
+                title=data.get('title'),
+                content=data.get('content')
+            )
             return JsonResponse({'message': 'Post updated successfully'})
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=400)
     
     elif request.method == 'DELETE':
-        post.delete()
+        delete_post(pk)
         return JsonResponse({'message': 'Post deleted successfully'})
 
-@csrf_exempt
-@require_http_methods(["POST"])
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def post_like(request, pk):
-    try:
-        post = Post.objects.get(pk=pk)
-        post.likes += 1
-        post.save()
-        return JsonResponse({'likes': post.likes})
-    except Post.DoesNotExist:
+    likes = like_post(pk)
+    
+    if likes is None:
         return JsonResponse({'error': 'Post not found'}, status=404)
+    
+    return JsonResponse({'likes': likes})
 
-@csrf_exempt
-@require_http_methods(["POST"])
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def reply_create(request, post_id):
     try:
-        post = Post.objects.get(pk=post_id)
+        # Verify Firebase token to get user UID
+        auth_header = request.headers.get('Authorization', '')
+        if not auth_header.startswith('Bearer '):
+            return JsonResponse({'error': 'Authorization token required'}, status=401)
+        
+        token = auth_header.split('Bearer ')[1]
+        decoded_token = verify_firebase_token(token)
+        
+        if not decoded_token:
+            return JsonResponse({'error': 'Invalid token'}, status=401)
+        
+        user_uid = decoded_token['uid']
+        
         data = json.loads(request.body)
-        reply = Reply.objects.create(
-            post=post,
-            user=data['user'],
+        reply = create_reply(
+            post_id=post_id,
+            user_uid=user_uid,
             text=data['text']
         )
-        return JsonResponse({
-            'id': reply.id,
-            'user': reply.user,
-            'text': reply.text,
-            'created_at': reply.created_at.isoformat()
-        }, status=201)
-    except Post.DoesNotExist:
-        return JsonResponse({'error': 'Post not found'}, status=404)
+        return JsonResponse(reply, status=201)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=400)
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def delete_post_view(request, pk):
+    try:
+        # Verify Firebase token to get user UID
+        auth_header = request.headers.get('Authorization', '')
+        if not auth_header.startswith('Bearer '):
+            return JsonResponse({'error': 'Authorization token required'}, status=401)
+        
+        token = auth_header.split('Bearer ')[1]
+        decoded_token = verify_firebase_token(token)
+        
+        if not decoded_token:
+            return JsonResponse({'error': 'Invalid token'}, status=401)
+        
+        user_uid = decoded_token['uid']
+        
+        # Get post to verify ownership
+        post = get_post(pk)
+        if not post:
+            return JsonResponse({'error': 'Post not found'}, status=404)
+        
+        if post.get('author_uid') != user_uid:
+            return JsonResponse({'error': 'Not authorized to delete this post'}, status=403)
+        
+        delete_post(pk)
+        return JsonResponse({'message': 'Post deleted successfully'})
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=400)
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def delete_reply_view(request, reply_id):
+    try:
+        # Verify Firebase token to get user UID
+        auth_header = request.headers.get('Authorization', '')
+        if not auth_header.startswith('Bearer '):
+            return JsonResponse({'error': 'Authorization token required'}, status=401)
+        
+        token = auth_header.split('Bearer ')[1]
+        decoded_token = verify_firebase_token(token)
+        
+        if not decoded_token:
+            return JsonResponse({'error': 'Invalid token'}, status=401)
+        
+        user_uid = decoded_token['uid']
+        
+        # Get reply to verify ownership
+        from config.firestore import get_firestore_client
+        db = get_firestore_client()
+        reply_ref = db.collection('replies').document(reply_id)
+        reply = reply_ref.get()
+        
+        if not reply.exists:
+            return JsonResponse({'error': 'Reply not found'}, status=404)
+        
+        reply_data = reply.to_dict()
+        if reply_data.get('user_uid') != user_uid:
+            return JsonResponse({'error': 'Not authorized to delete this reply'}, status=403)
+        
+        delete_reply(reply_id)
+        return JsonResponse({'message': 'Reply deleted successfully'})
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=400)
