@@ -3,6 +3,9 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
+from .social_graph import build_social_clusters
+from .social_graph_expanded import build_social_clusters_expanded
+
 import json
 from .firebase_service import (
     create_post,
@@ -184,3 +187,70 @@ def delete_reply_view(request, reply_id):
         return JsonResponse({'message': 'Reply deleted successfully'})
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=400)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def social_clusters_view(request):
+    """
+    Return clusters of users (by Firebase UID) who are connected
+    through post/reply interactions, computed using Union–Find.
+    """
+    clusters = build_social_clusters()
+    # Wrap in an object so JsonResponse safe=True is fine
+    return JsonResponse({'clusters': clusters})
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def social_clusters_expanded_view(request):
+    """
+    Returns clusters of interacting users with full user profiles.
+    """
+    clusters = build_social_clusters_expanded()
+    return JsonResponse({'clusters': clusters}, safe=False)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def my_cluster_view(request):
+    """
+    Return ONLY the cluster the current user belongs to.
+    """
+    uid = request.user.uid  # from Firebase auth middleware
+    clusters = build_social_clusters_expanded()
+
+    # find the cluster containing this user
+    for cluster in clusters:
+        if any(member.get("uid") == uid for member in cluster):
+            return JsonResponse({"cluster": cluster})
+
+    return JsonResponse({"cluster": []})
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def suggested_friends_view(request):
+    """
+    Returns cluster members who are NOT followed yet by the current user.
+    """
+    uid = request.user.uid
+    clusters = build_social_clusters_expanded()
+
+    # find your cluster
+    my_cluster = []
+    for cluster in clusters:
+        if any(m["uid"] == uid for m in cluster):
+            my_cluster = cluster
+            break
+
+    if not my_cluster:
+        return JsonResponse({"suggested": []})
+
+    # get your user profile to see who you follow
+    db = get_firestore_client()
+    user_doc = db.collection("users").document(uid).get()
+    follows = user_doc.get("following") or []
+
+    suggested = [
+        member for member in my_cluster
+        if member["uid"] != uid and member["uid"] not in follows
+    ]
+
+    return JsonResponse({"suggested": suggested})
