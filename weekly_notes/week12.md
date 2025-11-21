@@ -1,0 +1,3 @@
+Week 12:
+Redesigned the Progress page this week. Instead of just showing individual exercises, users can now add workout days and then add multiple exercises to each day. Each exercise tracks sets, reps, and weight. The main page shows the date and workout type (upper/lower/push/pull/etc) which is way cleaner.
+Implemented the Trie data structure for exercise autocomplete. It's pulling from the ExerciseDB API and building a trie with over 1000 exercises. As you type it suggests exercises that match. Had some issues with the API rate limiting at first but we added delays between requests to handle that.

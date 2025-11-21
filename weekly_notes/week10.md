@@ -1,0 +1,5 @@
+Week 10:
+This week we focused on getting the Communities page fully functional. We got the post creation working and users can now create posts with titles, content, and categories. The backend is storing everything in Firestore properly.
+We also got the basic like functionality working, so users can like posts and the count increments. Still need to prevent multiple likes from the same user but that's a next week problem lol.
+Fixed some overflow issues on the Communities page where long text was going past the screen edges. Added word-wrap and overflow handling to keep everything contained. Also made sure the post detail pages don't overflow either.
+Started working on the post sorting feature. Want to be able to sort by date or by likes, but haven't implemented the backend logic for that yet.
