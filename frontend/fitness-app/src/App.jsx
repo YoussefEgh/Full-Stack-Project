@@ -6,11 +6,11 @@ import Register from "./pages/Register.jsx";
 import Settings from "./pages/Settings.jsx";
 import Communities from "./pages/Communities.jsx";
 import CommunitiesContent from "./pages/CommunitiesContent.jsx";
-import Messages from "./pages/Messages.jsx";
 import Progress from "./pages/Progress.jsx";
 import Workouts from "./pages/Workouts.jsx";
 import SettingsContainer from "./pages/SettingsContainer.jsx";
 import PostDetail from "./pages/PostDetail.jsx";
+import Clusters from "./pages/Clusters";
 
 function App() {
   return (
@@ -22,8 +22,8 @@ function App() {
         <Route path="/progress" element={<Progress />} />
         <Route path="/workouts" element={<Workouts />} />
         <Route path="/communities" element={<Communities />} />
-        <Route path="/messages" element={<Messages />} />
         <Route path="/post/:id" element={<Communities />} />
+        <Route path="/clusters" element={<Clusters />} />
 
       </Routes>
     </Router>
