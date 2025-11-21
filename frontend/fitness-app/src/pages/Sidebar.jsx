@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FiHome, FiActivity, FiBarChart2, FiMessageCircle, FiUsers, FiSettings } from "react-icons/fi";
+import { FiHome, FiActivity, FiBarChart2, FiUsers, FiSettings, FiLayers } from "react-icons/fi";
 
 const Sidebar = () => {
   const navigate = useNavigate();
@@ -10,8 +10,8 @@ const Sidebar = () => {
     { name: "Home", path: "/", icon: <FiHome /> },
     { name: "Workouts", path: "/workouts", icon: <FiActivity /> },
     { name: "Progress", path: "/progress", icon: <FiBarChart2 /> },
-    { name: "Messages", path: "/messages", icon: <FiMessageCircle /> },
     { name: "Communities", path: "/communities", icon: <FiUsers /> },
+    { name: "Clusters", path: "/clusters", icon: <FiLayers /> },
     { name: "Settings", path: "/settings", icon: <FiSettings /> }
   ];
 

@@ -29,7 +29,10 @@ def post_list(request):
     if request.method == 'GET':
         sort_by = request.GET.get('sort_by', 'date')
         
-        posts_data = get_all_posts(sort_by=sort_by)
+        # Get user UID for like tracking from authenticated user
+        user_uid = request.user.uid if hasattr(request.user, 'uid') else None
+        
+        posts_data = get_all_posts(sort_by=sort_by, user_uid=user_uid)
         
         return JsonResponse(posts_data, safe=False)
     
@@ -62,7 +65,10 @@ def post_list(request):
 @api_view(['GET', 'PUT', 'DELETE'])
 @permission_classes([IsAuthenticated])
 def post_detail(request, pk):
-    post = get_post(pk)
+    # Get user UID for like tracking from authenticated user
+    user_uid = request.user.uid if hasattr(request.user, 'uid') else None
+    
+    post = get_post(pk, user_uid=user_uid)
     
     if not post:
         return JsonResponse({'error': 'Post not found'}, status=404)
@@ -89,12 +95,19 @@ def post_detail(request, pk):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def post_like(request, pk):
-    likes = like_post(pk)
+    # Get user UID from authenticated user
+    user_uid = request.user.uid if hasattr(request.user, 'uid') else None
     
-    if likes is None:
+    if not user_uid:
+        return JsonResponse({'error': 'User not authenticated'}, status=401)
+    
+    result = like_post(pk, user_uid)
+    
+    if result is None or result[0] is None:
         return JsonResponse({'error': 'Post not found'}, status=404)
     
-    return JsonResponse({'likes': likes})
+    likes, is_liked = result
+    return JsonResponse({'likes': likes, 'liked': is_liked})
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -246,7 +259,8 @@ def suggested_friends_view(request):
     # get your user profile to see who you follow
     db = get_firestore_client()
     user_doc = db.collection("users").document(uid).get()
-    follows = user_doc.get("following") or []
+    user_data = user_doc.to_dict() if user_doc.exists else {}
+    follows = user_data.get("following") or []
 
     suggested = [
         member for member in my_cluster
