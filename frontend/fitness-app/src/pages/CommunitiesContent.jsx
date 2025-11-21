@@ -66,7 +66,7 @@ function CommunitiesContent() {
       if (response.ok) {
         const data = await response.json();
         setPosts(prev => 
-          prev.map(p => p.id === id ? { ...p, likes: data.likes } : p)
+          prev.map(p => p.id === id ? { ...p, likes: data.likes, liked: data.liked } : p)
         );
       }
     } catch (err) {
@@ -149,9 +149,10 @@ function CommunitiesContent() {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          width: "85vw",
           flexDirection: "column",
           gap: "20px",
+          overflowX: "hidden",
+          boxSizing: "border-box",
         }}
       >
         <FiLoader 
@@ -217,9 +218,11 @@ function CommunitiesContent() {
         backgroundColor: "#333",
         color: "#fff",
         padding: "40px",
-        width: "85vw",
-        minHeight: "30vw",
+        minHeight: "100%",
         boxSizing: "border-box",
+        overflowX: "hidden",
+        overflowY: "auto",
+        maxWidth: "100%",
       }}
     >
       <h1 style={{ marginBottom: "10px" }}>💬 Communities</h1>
@@ -281,7 +284,7 @@ function CommunitiesContent() {
         </button>
       </div>
 
-      <div style={{ display: "flex", flexDirection: "column", gap: "25px" }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: "25px", width: "100%", maxWidth: "100%" }}>
         {posts.map((post) => (
           <div
             key={post.id}
@@ -294,6 +297,11 @@ function CommunitiesContent() {
               boxShadow: "0 0 10px rgba(0,0,0,0.4)",
               cursor: "pointer",
               transition: "transform 0.2s ease",
+              width: "100%",
+              maxWidth: "100%",
+              boxSizing: "border-box",
+              wordWrap: "break-word",
+              overflowWrap: "break-word",
             }}
             onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.02)")}
             onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
@@ -304,9 +312,11 @@ function CommunitiesContent() {
                 justifyContent: "space-between",
                 alignItems: "center",
                 marginBottom: "10px",
+                gap: "10px",
+                flexWrap: "wrap",
               }}
             >
-              <h3 style={{ margin: 0 }}>{post.title}</h3>
+              <h3 style={{ margin: 0, wordWrap: "break-word", overflowWrap: "break-word", flex: "1 1 auto", minWidth: 0 }}>{post.title}</h3>
               <span
                 style={{
                   backgroundColor: "#666",
@@ -339,15 +349,16 @@ function CommunitiesContent() {
                 display: "flex",
                 alignItems: "center",
                 gap: "6px",
-                color: "#aaa",
+                color: post.liked ? "#00bfff" : "#aaa",
                 cursor: "pointer",
+                transition: "color 0.2s"
               }}
               onClick={(e) => {
                 e.stopPropagation();
                 toggleLike(post.id);
               }}
             >
-              <AiOutlineLike />
+              {post.liked ? <AiFillLike /> : <AiOutlineLike />}
               <span>{post.likes}</span>
             </div>
           </div>

@@ -1,7 +1,14 @@
 """
 Firestore helper functions
 """
-from config.firebase import get_firestore_client
+from config.firebase import get_firestore_client as _get_firestore_client
+
+# Re-export get_firestore_client so it can be imported from this module
+def get_firestore_client():
+    """Get Firestore client instance - wrapper to ensure proper import"""
+    return _get_firestore_client()
+
+__all__ = ['get_firestore_client', 'get_collection', 'get_document', 'create_document', 'update_document', 'delete_document', 'query_collection']
 
 def get_collection(collection_name):
     """

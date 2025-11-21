@@ -204,11 +204,17 @@ function PostDetail() {
   };
 
   const toggleLike = async () => {
+    if (!idToken) {
+      alert('Please login to like posts');
+      return;
+    }
+
     try {
       const response = await fetch(`http://127.0.0.1:8000/api/communities/posts/${post.id}/like/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${idToken}`
         },
       });
       
@@ -216,7 +222,8 @@ function PostDetail() {
         const data = await response.json();
         setPost(prev => ({
           ...prev,
-          likes: data.likes
+          likes: data.likes,
+          liked: data.liked
         }));
       }
     } catch (err) {
@@ -231,16 +238,21 @@ function PostDetail() {
         backgroundColor: "#333",
         color: "#fff",
         overflowY: "auto",
+        overflowX: "hidden",
         display: "flex",
         justifyContent: "center",
+        maxWidth: "100%",
+        boxSizing: "border-box",
       }}
     >
       <div
         style={{
-          width: "85vw",
+          width: "100%",
+          maxWidth: "100%",
           padding: "40px",
-          minHeight: "30vw",
+          minHeight: "100%",
           boxSizing: "border-box",
+          overflowX: "hidden",
         }}
       >
       <button
@@ -266,10 +278,15 @@ function PostDetail() {
           padding: "25px",
           boxShadow: "0 0 10px rgba(0,0,0,0.5)",
           marginBottom: "20px",
+          width: "100%",
+          maxWidth: "100%",
+          boxSizing: "border-box",
+          wordWrap: "break-word",
+          overflowWrap: "break-word",
         }}
       >
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start", marginBottom: "5px" }}>
-          <h2 style={{ margin: 0, flex: 1 }}>{post.title}</h2>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start", marginBottom: "5px", gap: "10px", flexWrap: "wrap" }}>
+          <h2 style={{ margin: 0, flex: "1 1 auto", minWidth: 0, wordWrap: "break-word", overflowWrap: "break-word" }}>{post.title}</h2>
           {post.author_uid === user?.uid && (
             <button
               onClick={handleDeletePost}
@@ -317,6 +334,11 @@ function PostDetail() {
           borderRadius: "10px",
           padding: "25px",
           boxShadow: "0 0 10px rgba(0,0,0,0.5)",
+          width: "100%",
+          maxWidth: "100%",
+          boxSizing: "border-box",
+          wordWrap: "break-word",
+          overflowWrap: "break-word",
         }}
       >
         <h3 style={{ marginBottom: "15px", color: "#00bfff" }}>Replies ({post.replies.length})</h3>

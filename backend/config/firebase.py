@@ -31,7 +31,15 @@ def get_firestore_client():
     # Ensure Firebase is initialized first
     if not firebase_admin._apps:
         initialize_firebase()
-    return firestore.client()
+    
+    # Get the Firestore client
+    try:
+        client = firestore.client()
+        if client is None:
+            raise Exception("Firestore client returned None - Firebase may not be initialized correctly")
+        return client
+    except Exception as e:
+        raise Exception(f"Failed to get Firestore client: {str(e)}. Make sure Firebase is initialized properly.")
 
 # Get Firebase Auth instance
 def get_auth():

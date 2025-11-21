@@ -26,6 +26,7 @@ def create_post(title, content, author_uid, category='General'):
         'author_uid': author_uid,
         'category': category,
         'likes': 0,
+        'liked_by': [],  # List of user UIDs who liked this post
         'created_at': datetime.now(),
         'updated_at': datetime.now()
     }
@@ -33,9 +34,10 @@ def create_post(title, content, author_uid, category='General'):
     db.collection('posts').document(post_id).set(post_data)
     return post_data
 
-def get_all_posts(sort_by='date'):
+def get_all_posts(sort_by='date', user_uid=None):
     """
     Get all posts from Firestore, sorted by date or likes using custom PriorityQueue
+    If user_uid is provided, also includes whether the user has liked each post
     """
     db = get_firestore_client()
     
@@ -56,6 +58,10 @@ def get_all_posts(sort_by='date'):
         # Convert to ISO format for frontend
         post_data['created_at'] = created_at_dt.isoformat() if created_at_dt else None
         post_data['updated_at'] = post_data['updated_at'].isoformat() if post_data.get('updated_at') else None
+        
+        # Check if current user has liked this post
+        liked_by = post_data.get('liked_by', [])
+        post_data['liked'] = user_uid in liked_by if user_uid else False
         
         # Get replies for this post
         replies_query = db.collection('replies').where('post_id', '==', post_data['id'])
@@ -93,9 +99,10 @@ def get_all_posts(sort_by='date'):
     
     return posts_list
 
-def get_post(post_id):
+def get_post(post_id, user_uid=None):
     """
     Get a specific post by ID
+    If user_uid is provided, also includes whether the user has liked this post
     """
     db = get_firestore_client()
     post_ref = db.collection('posts').document(post_id)
@@ -107,6 +114,10 @@ def get_post(post_id):
     post_data = post.to_dict()
     post_data['created_at'] = post_data['created_at'].isoformat() if post_data.get('created_at') else None
     post_data['updated_at'] = post_data['updated_at'].isoformat() if post_data.get('updated_at') else None
+    
+    # Check if current user has liked this post
+    liked_by = post_data.get('liked_by', [])
+    post_data['liked'] = user_uid in liked_by if user_uid else False
     
     # Get replies for this post (without ordering to avoid index requirement)
     replies_query = db.collection('replies').where('post_id', '==', post_id)
@@ -158,22 +169,43 @@ def delete_post(post_id):
     db.collection('posts').document(post_id).delete()
     return True
 
-def like_post(post_id):
+def like_post(post_id, user_uid):
     """
-    Increment likes for a post
+    Toggle like for a post - if user already liked, unlike it; otherwise like it
+    Returns: (new_like_count, is_liked)
     """
     db = get_firestore_client()
     post_ref = db.collection('posts').document(post_id)
     post = post_ref.get()
     
     if not post.exists:
-        return None
+        return None, False
     
-    current_likes = post.to_dict().get('likes', 0)
-    post_ref.update({'likes': current_likes + 1})
+    post_data = post.to_dict()
+    liked_by = post_data.get('liked_by', [])  # List of user UIDs who liked this post
     
-    updated_post = post_ref.get()
-    return updated_post.to_dict().get('likes')
+    # Check if user already liked
+    if user_uid in liked_by:
+        # Unlike: remove user from liked_by and decrement likes
+        liked_by.remove(user_uid)
+        current_likes = post_data.get('likes', 0)
+        new_likes = max(0, current_likes - 1)  # Don't go below 0
+        is_liked = False
+    else:
+        # Like: add user to liked_by and increment likes
+        if user_uid not in liked_by:
+            liked_by.append(user_uid)
+        current_likes = post_data.get('likes', 0)
+        new_likes = current_likes + 1
+        is_liked = True
+    
+    # Update the post
+    post_ref.update({
+        'likes': new_likes,
+        'liked_by': liked_by
+    })
+    
+    return new_likes, is_liked
 
 def create_reply(post_id, user_uid, text):
     """
