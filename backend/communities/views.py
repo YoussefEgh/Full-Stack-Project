@@ -19,6 +19,7 @@ from .firebase_service import (
 )
 from authentication.firebase_service import verify_firebase_token
 from config.firebase import initialize_firebase
+from config.firestore import get_firestore_client
 
 # Initialize Firebase on app startup
 initialize_firebase()
