@@ -1,16 +1,21 @@
+"""Trie (Prefix Tree) data structure implementation for autocomplete.
+
+This file performs a light, non-functional refactor: improved type
+annotations and a small normalization helper. Behaviour and public API
+remain unchanged (case-insensitive storage and matching).
 """
-Trie (Prefix Tree) data structure implementation for autocomplete
-"""
-from typing import List, Optional
+from typing import Dict, List, Optional
 
 
 class TrieNode:
-    """Node in the Trie data structure"""
-    
-    def __init__(self):
-        self.children = {}  # Dictionary mapping character to TrieNode
-        self.is_end_of_word = False  # True if this node represents the end of a word
-        self.word = None  # Store the complete word at the end node (for easier retrieval)
+    """Node in the Trie data structure."""
+
+    def __init__(self) -> None:
+        # Map character -> child node
+        self.children: Dict[str, 'TrieNode'] = {}
+        self.is_end_of_word: bool = False
+        # Stored word (lowercased per original behaviour)
+        self.word: Optional[str] = None
 
 
 class Trie:
@@ -36,8 +41,9 @@ class Trie:
         """
         if not word or not word.strip():
             return
-        
-        word = word.lower().strip()
+
+        # Normalize input (preserves original behaviour of lowercasing and trimming)
+        word = self._normalize(word)
         node = self.root
         
         # Traverse the trie, creating nodes as needed
@@ -64,8 +70,8 @@ class Trie:
         """
         if not word:
             return False
-        
-        word = word.lower().strip()
+
+        word = self._normalize(word)
         node = self.root
         
         for char in word:
@@ -87,15 +93,15 @@ class Trie:
         """
         if not prefix:
             return False
-        
-        prefix = prefix.lower().strip()
+
+        prefix = self._normalize(prefix)
         node = self.root
-        
+
         for char in prefix:
             if char not in node.children:
                 return False
             node = node.children[char]
-        
+
         return True
     
     def autocomplete(self, prefix: str, max_results: int = 10, contains: bool = False) -> List[str]:
@@ -113,36 +119,37 @@ class Trie:
         """
         if not prefix:
             return []
-        
-        prefix = prefix.lower().strip()
-        results = []
-        
+
+        prefix = self._normalize(prefix)
+        results: List[str] = []
+
         # First, try exact prefix match
         node = self.root
         found_prefix = True
-        
-        # Navigate to the node representing the prefix
+
         for char in prefix:
             if char not in node.children:
                 found_prefix = False
                 break
             node = node.children[char]
-        
+
         if found_prefix:
-            # We found the prefix, collect words starting with it
             self._collect_words(node, prefix, results, max_results)
-        
+
         # If contains=True and we need more results, search all words
         if contains and len(results) < max_results:
             all_words = self.get_all_words()
-            prefix_lower = prefix.lower()
+            prefix_lower = prefix
+            # Use a seen set for case-insensitive deduplication
+            seen = {r.lower() for r in results}
             for word in all_words:
                 word_lower = word.lower()
-                if prefix_lower in word_lower and word_lower not in [r.lower() for r in results]:
+                if prefix_lower in word_lower and word_lower not in seen:
                     results.append(word)
+                    seen.add(word_lower)
                     if len(results) >= max_results:
                         break
-        
+
         return results
     
     def _collect_words(self, node: TrieNode, current_prefix: str, results: List[str], max_results: int) -> None:
@@ -175,9 +182,13 @@ class Trie:
         Returns:
             List of all words in the trie
         """
-        results = []
+        results: List[str] = []
         self._collect_words(self.root, "", results, float('inf'))
         return results
+
+    def _normalize(self, text: str) -> str:
+        """Normalize a string for storage/matching (trim then lowercase)."""
+        return text.strip().lower()
     
     def clear(self) -> None:
         """Clear all words from the trie"""
