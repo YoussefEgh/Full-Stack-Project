@@ -1,8 +1,4 @@
 """Trie (Prefix Tree) data structure implementation for autocomplete.
-
-This file performs a light, non-functional refactor: improved type
-annotations and a small normalization helper. Behaviour and public API
-remain unchanged (case-insensitive storage and matching).
 """
 from typing import Dict, List, Optional
 
