@@ -20,7 +20,13 @@ const ProgressContent = () => {
   const [selectedDayId, setSelectedDayId] = useState(null);
   const [editingExercise, setEditingExercise] = useState(null); // {dayId, exerciseId, exercise}
   const [newDayForm, setNewDayForm] = useState({
-    date: new Date().toISOString().split('T')[0],
+    date: (() => {
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const day = String(now.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    })(),
     workout_type: 'regular'
   });
   const [exerciseForm, setExerciseForm] = useState({
@@ -43,7 +49,7 @@ const ProgressContent = () => {
 
   const fetchWorkoutDays = async () => {
     if (!idToken) {
-      setLoading(false);
+        setLoading(false);
       return;
     }
 
@@ -107,8 +113,12 @@ const ProgressContent = () => {
       
       // Close modal and reset form first
       setShowAddDayModal(false);
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const day = String(now.getDate()).padStart(2, '0');
       setNewDayForm({
-        date: new Date().toISOString().split('T')[0],
+        date: `${year}-${month}-${day}`,
         workout_type: 'regular'
       });
       setError(null);
@@ -170,7 +180,7 @@ const ProgressContent = () => {
       setEditingExercise(null);
       setError(null);
     } catch (err) {
-      setError(err.message);
+        setError(err.message);
       console.error('Error adding exercise:', err);
     }
   };
@@ -239,7 +249,9 @@ const ProgressContent = () => {
   };
 
   const formatDate = (dateString) => {
-    const date = new Date(dateString);
+    // Parse the date string (YYYY-MM-DD) directly to avoid timezone conversion issues
+    const [year, month, day] = dateString.split('-').map(Number);
+    const date = new Date(year, month - 1, day); // month is 0-indexed
     return date.toLocaleDateString('en-US', { 
       weekday: 'short', 
       year: 'numeric', 
@@ -344,7 +356,7 @@ const ProgressContent = () => {
       flex: 1,
       minWidth: 0,
       height: "100%",
-      backgroundColor: "#333",
+      backgroundColor: "#000",
       color: "#fff",
       padding: "40px",
       overflowX: "hidden",
@@ -352,25 +364,25 @@ const ProgressContent = () => {
       boxSizing: "border-box"
     }}>
       <div style={{ marginBottom: "30px" }}>
-        <h1 style={{ marginBottom: "10px", fontSize: "34px" }}>🏋️ Your Progress</h1>
-        <p style={{ color: "#aaa", marginBottom: "20px" }}>
-          Track your workouts by day and see your progress over time
+        <h1 style={{ marginBottom: "10px" }}>🏋️ Your Progress</h1>
+        <p style={{ marginBottom: "20px", color: "#ccc" }}>
+          Track your workouts by day and see your progress over time.
         </p>
         <button
           onClick={() => setShowAddDayModal(true)}
           style={{
-            backgroundColor: "#00bfff",
+            backgroundColor: "#1abc9c",
             border: "none",
             borderRadius: "8px",
             padding: "12px 24px",
-            color: "#fff",
+            color: "#000",
             cursor: "pointer",
             fontSize: "16px",
             fontWeight: "bold",
             transition: "background-color 0.2s"
           }}
-          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#0099cc"}
-          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "#00bfff"}
+          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#16a085"}
+          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "#1abc9c"}
         >
           ➕ Add New Workout Day
         </button>
@@ -392,7 +404,8 @@ const ProgressContent = () => {
         <div>Loading workout days...</div>
       ) : workoutDays.length === 0 ? (
         <div style={{
-          backgroundColor: "#444",
+          background: "linear-gradient(135deg, #111, #0a0a0a)",
+          border: "1px solid #222",
           padding: "40px",
           borderRadius: "12px",
           textAlign: "center",
@@ -407,8 +420,8 @@ const ProgressContent = () => {
             <div
               key={day.id}
               style={{
-                backgroundColor: "#444",
-                border: "1px solid #555",
+                background: "linear-gradient(135deg, #111, #0a0a0a)",
+                border: "2px solid #1abc9c",
                 borderRadius: "12px",
                 padding: "24px",
                 boxShadow: "0 4px 12px rgba(0,0,0,0.3)"
@@ -425,7 +438,7 @@ const ProgressContent = () => {
                     {formatDate(day.date)}
                   </h2>
                   <span style={{
-                    backgroundColor: "#00bfff",
+                    backgroundColor: "#1abc9c",
                     color: "#000",
                     padding: "6px 12px",
                     borderRadius: "20px",
@@ -439,13 +452,14 @@ const ProgressContent = () => {
                   <button
                     onClick={() => openExerciseModal(day.id)}
                     style={{
-                      backgroundColor: "#4caf50",
+                      backgroundColor: "#1abc9c",
                       border: "none",
                       borderRadius: "6px",
                       padding: "8px 16px",
-                      color: "#fff",
+                      color: "#000",
                       cursor: "pointer",
-                      fontSize: "14px"
+                      fontSize: "14px",
+                      fontWeight: "bold"
                     }}
                   >
                     ➕ Add Exercise
@@ -469,7 +483,8 @@ const ProgressContent = () => {
 
               {day.exercises && day.exercises.length > 0 ? (
                 <div style={{
-                  backgroundColor: "#333",
+                  backgroundColor: "#141414",
+                  border: "1px solid #242424",
                   borderRadius: "8px",
                   padding: "16px",
                   marginTop: "16px"
@@ -482,7 +497,8 @@ const ProgressContent = () => {
                       <div
                         key={exercise.id}
                         style={{
-                          backgroundColor: "#222",
+                          backgroundColor: "#1a1a1a",
+                          border: "1px solid #333",
                           padding: "12px",
                           borderRadius: "6px",
                           flex: "1 1 200px",
@@ -502,7 +518,7 @@ const ProgressContent = () => {
                               style={{
                                 backgroundColor: "transparent",
                                 border: "none",
-                                color: "#00bfff",
+                                color: "#1abc9c",
                                 cursor: "pointer",
                                 fontSize: "16px",
                                 padding: "0 4px",
@@ -522,8 +538,8 @@ const ProgressContent = () => {
                                 cursor: "pointer",
                                 fontSize: "16px",
                                 padding: "0",
-                                display: "flex",
-                                alignItems: "center"
+        display: "flex",
+        alignItems: "center"
                               }}
                               title="Delete exercise"
                             >
@@ -532,7 +548,7 @@ const ProgressContent = () => {
                           </div>
                         </div>
                         <div style={{ color: "#aaa", fontSize: "14px" }}>
-                          {exercise.sets} sets × {exercise.reps} reps @ {exercise.weight}kg
+                          {exercise.sets} sets × {exercise.reps} reps @ {exercise.weight} lbs
                         </div>
                       </div>
                     ))}
@@ -540,7 +556,8 @@ const ProgressContent = () => {
                 </div>
               ) : (
                 <div style={{
-                  backgroundColor: "#333",
+                  backgroundColor: "#141414",
+                  border: "1px solid #242424",
                   borderRadius: "8px",
                   padding: "20px",
                   marginTop: "16px",
@@ -578,7 +595,8 @@ const ProgressContent = () => {
         >
           <div
             style={{
-              backgroundColor: "#444",
+              background: "linear-gradient(135deg, #111, #0a0a0a)",
+          border: "1px solid #222",
               borderRadius: "12px",
               padding: "30px",
               width: "90%",
@@ -587,7 +605,7 @@ const ProgressContent = () => {
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            <h2 style={{ marginBottom: "20px", color: "#00bfff" }}>Add New Workout Day</h2>
+            <h2 style={{ marginBottom: "20px", color: "#1abc9c" }}>Add New Workout Day</h2>
             <form onSubmit={handleAddDay}>
               <div style={{ marginBottom: "20px" }}>
                 <label style={{ display: "block", marginBottom: "8px", color: "#ccc", fontWeight: "bold" }}>
@@ -602,8 +620,8 @@ const ProgressContent = () => {
                     width: "100%",
                     padding: "10px",
                     borderRadius: "6px",
-                    border: "1px solid #666",
-                    backgroundColor: "#555",
+                    border: "1px solid #333",
+                    backgroundColor: "#0a0a0a",
                     color: "#fff",
                     fontSize: "16px"
                   }}
@@ -621,8 +639,8 @@ const ProgressContent = () => {
                     width: "100%",
                     padding: "10px",
                     borderRadius: "6px",
-                    border: "1px solid #666",
-                    backgroundColor: "#555",
+                    border: "1px solid #333",
+                    backgroundColor: "#0a0a0a",
                     color: "#fff",
                     fontSize: "16px"
                   }}
@@ -692,12 +710,16 @@ const ProgressContent = () => {
               setSelectedDayId(null);
               setEditingExercise(null);
               setExerciseForm({ name: '', reps: '', sets: '', weight: '' });
+              setExerciseSuggestions([]);
+              setShowSuggestions(false);
+              setHasSearched(false); // Reset search flag when modal closes
             }
           }}
         >
           <div
             style={{
-              backgroundColor: "#444",
+              background: "linear-gradient(135deg, #111, #0a0a0a)",
+              border: "2px solid #1abc9c",
               borderRadius: "12px",
               padding: "30px",
               width: "90%",
@@ -707,7 +729,7 @@ const ProgressContent = () => {
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            <h2 style={{ marginBottom: "20px", color: "#4caf50", marginTop: 0 }}>
+            <h2 style={{ marginBottom: "20px", color: "#1abc9c", marginTop: 0 }}>
               {editingExercise ? "Edit Exercise" : "Add Exercise"}
             </h2>
             <form onSubmit={editingExercise ? handleUpdateExercise : handleAddExercise} style={{ width: "100%" }}>
@@ -715,8 +737,8 @@ const ProgressContent = () => {
                 <label style={{ display: "block", marginBottom: "8px", color: "#ccc", fontWeight: "bold" }}>
                   Exercise Name
                 </label>
-                <input
-                  type="text"
+        <input
+          type="text"
                   value={exerciseForm.name}
                   onChange={handleExerciseNameChange}
                   onFocus={() => {
@@ -728,16 +750,17 @@ const ProgressContent = () => {
                     // Delay hiding suggestions to allow clicking on them
                     setTimeout(() => {
                       setShowSuggestions(false);
+                      setHasSearched(false); // Reset search flag when input loses focus
                     }, 250);
                   }}
-                  required
+          required
                   placeholder="e.g., Bench Press (start typing for suggestions)"
                   style={{
                     width: "100%",
                     padding: "10px",
                     borderRadius: "6px",
-                    border: "1px solid #666",
-                    backgroundColor: "#555",
+                    border: "1px solid #333",
+                    backgroundColor: "#0a0a0a",
                     color: "#fff",
                     fontSize: "16px",
                     boxSizing: "border-box"
@@ -750,8 +773,8 @@ const ProgressContent = () => {
                     left: 0,
                     right: 0,
                     padding: "10px",
-                    backgroundColor: "#333",
-                    border: "1px solid #555",
+                    backgroundColor: "#000",
+                    border: "1px solid #222",
                     borderRadius: "6px",
                     marginTop: "4px",
                     color: "#aaa",
@@ -768,8 +791,8 @@ const ProgressContent = () => {
                       top: "100%",
                       left: 0,
                       right: 0,
-                      backgroundColor: "#333",
-                      border: "1px solid #555",
+                      backgroundColor: "#000",
+                      border: "1px solid #222",
                       borderRadius: "6px",
                       marginTop: "4px",
                       maxHeight: "200px",
@@ -789,12 +812,12 @@ const ProgressContent = () => {
                         style={{
                           padding: "10px",
                           cursor: "pointer",
-                          borderBottom: index < exerciseSuggestions.length - 1 ? "1px solid #444" : "none",
+                          borderBottom: index < exerciseSuggestions.length - 1 ? "1px solid #222" : "none",
                           color: "#fff",
                           transition: "background-color 0.2s",
                           fontSize: "14px"
                         }}
-                        onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#444")}
+                        onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#222")}
                         onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
                       >
                         {suggestion}
@@ -809,8 +832,8 @@ const ProgressContent = () => {
                     left: 0,
                     right: 0,
                     padding: "10px",
-                    backgroundColor: "#333",
-                    border: "1px solid #555",
+                    backgroundColor: "#000",
+                    border: "1px solid #222",
                     borderRadius: "6px",
                     marginTop: "4px",
                     color: "#aaa",
@@ -826,19 +849,19 @@ const ProgressContent = () => {
                   <label style={{ display: "block", marginBottom: "8px", color: "#ccc", fontWeight: "bold" }}>
                     Sets
                   </label>
-                  <input
-                    type="number"
+        <input
+          type="number"
                     value={exerciseForm.sets}
                     onChange={(e) => setExerciseForm({ ...exerciseForm, sets: e.target.value })}
-                    required
+          required
                     min="1"
                     placeholder="3"
                     style={{
                       width: "100%",
                       padding: "10px",
                       borderRadius: "6px",
-                      border: "1px solid #666",
-                      backgroundColor: "#555",
+                      border: "1px solid #333",
+                      backgroundColor: "#0a0a0a",
                       color: "#fff",
                       fontSize: "16px",
                       boxSizing: "border-box"
@@ -849,19 +872,19 @@ const ProgressContent = () => {
                   <label style={{ display: "block", marginBottom: "8px", color: "#ccc", fontWeight: "bold" }}>
                     Reps
                   </label>
-                  <input
-                    type="number"
+        <input
+          type="number"
                     value={exerciseForm.reps}
                     onChange={(e) => setExerciseForm({ ...exerciseForm, reps: e.target.value })}
-                    required
+          required
                     min="1"
                     placeholder="10"
                     style={{
                       width: "100%",
                       padding: "10px",
                       borderRadius: "6px",
-                      border: "1px solid #666",
-                      backgroundColor: "#555",
+                      border: "1px solid #333",
+                      backgroundColor: "#0a0a0a",
                       color: "#fff",
                       fontSize: "16px",
                       boxSizing: "border-box"
@@ -870,13 +893,13 @@ const ProgressContent = () => {
                 </div>
                 <div>
                   <label style={{ display: "block", marginBottom: "8px", color: "#ccc", fontWeight: "bold" }}>
-                    Weight (kg)
+                    Weight (lbs)
                   </label>
-                  <input
-                    type="number"
+        <input
+          type="number"
                     value={exerciseForm.weight}
                     onChange={(e) => setExerciseForm({ ...exerciseForm, weight: e.target.value })}
-                    required
+          required
                     min="0"
                     step="0.5"
                     placeholder="50"
@@ -884,8 +907,8 @@ const ProgressContent = () => {
                       width: "100%",
                       padding: "10px",
                       borderRadius: "6px",
-                      border: "1px solid #666",
-                      backgroundColor: "#555",
+                      border: "1px solid #333",
+                      backgroundColor: "#0a0a0a",
                       color: "#fff",
                       fontSize: "16px",
                       boxSizing: "border-box"
@@ -906,21 +929,7 @@ const ProgressContent = () => {
                     setHasSearched(false);
                   }}
                   style={{
-                    backgroundColor: "#666",
-                    border: "none",
-                    borderRadius: "6px",
-                    padding: "10px 20px",
-                    color: "#fff",
-                    cursor: "pointer",
-                    fontSize: "14px"
-                  }}
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  style={{
-                    backgroundColor: "#4caf50",
+                    backgroundColor: "#ff6b6b",
                     border: "none",
                     borderRadius: "6px",
                     padding: "10px 20px",
@@ -930,10 +939,25 @@ const ProgressContent = () => {
                     fontWeight: "bold"
                   }}
                 >
-                  {editingExercise ? "Update Exercise" : "Add Exercise"}
+                  Cancel
                 </button>
+                <button
+                  type="submit"
+                  style={{
+                    backgroundColor: "#1abc9c",
+                    border: "none",
+                    borderRadius: "6px",
+                    padding: "10px 20px",
+                    color: "#000",
+                    cursor: "pointer",
+                    fontSize: "14px",
+                    fontWeight: "bold"
+                  }}
+                >
+                  {editingExercise ? "Update Exercise" : "Add Exercise"}
+        </button>
               </div>
-            </form>
+      </form>
           </div>
         </div>
       )}

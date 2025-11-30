@@ -117,7 +117,9 @@ export default function Clusters() {
     minWidth: 0,
     height: "100%",
     padding: "40px",
+    paddingBottom: "60px", // Extra padding at bottom to prevent cutoff
     overflowY: "auto",
+    boxSizing: "border-box",
   };
 
   const sectionHeader = {
@@ -129,7 +131,7 @@ export default function Clusters() {
 
   const cardStyle = {
     background: "linear-gradient(135deg, #111, #0a0a0a)",
-    border: "1px solid #222",
+    border: "2px solid #1abc9c",
     borderRadius: "16px",
     padding: "24px",
     marginBottom: "30px",
@@ -158,8 +160,8 @@ export default function Clusters() {
       <Sidebar />
 
       <div style={contentStyle}>
-        <h1 style={{ fontSize: "34px", marginBottom: "6px" }}>🌐 Fitness Communities</h1>
-        <p style={{ color: "#aaa", marginBottom: "30px" }}>
+        <h1 style={{ marginBottom: "10px" }}>🌐 Clusters</h1>
+        <p style={{ marginBottom: "20px", color: "#ccc" }}>
           Automatically generated based on your engagement across posts & replies.
         </p>
 
@@ -168,10 +170,10 @@ export default function Clusters() {
         ) : (
           <>
             {/* ========================== MY CLUSTER ========================== */}
-            <h2 style={sectionHeader}>💪 Your Fitness Community</h2>
+            <h2 style={sectionHeader}>💪 Your Fitness Cluster</h2>
 
             <div style={cardStyle}>
-              <span style={pill}>Your Community</span>
+              <span style={pill}>Your Cluster</span>
               {myCluster.length === 0 ? (
                 <p>You have no interactions yet.</p>
               ) : (
@@ -195,8 +197,8 @@ export default function Clusters() {
               )}
             </div>
 
-            {/* ========================== ALL COMMUNITIES ========================== */}
-            <h2 style={sectionHeader}>🌐 All Communities</h2>
+            {/* ========================== ALL CLUSTERS ========================== */}
+            <h2 style={sectionHeader}>🌐 All Clusters</h2>
 
             {clusters.map((group, idx) => (
               <div key={idx} style={cardStyle}>

@@ -12,37 +12,49 @@ const ExerciseCard = ({ exercise }) => {
   return (
     <div
       style={{
-        backgroundColor: "#444",
-        border: "1px solid #555",
-        borderRadius: "8px",
+        background: "linear-gradient(135deg, #111, #0a0a0a)",
+        border: "2px solid #1abc9c",
+        borderRadius: "14px",
         padding: "20px",
         color: "#fff",
         position: "relative",
       }}
     >
-      {/* Exercise Title */}
-      <h3
-        style={{
-          marginTop: 0,
-          marginBottom: "15px",
-          color: "#fff",
-          fontSize: "18px",
-        }}
-      >
-        {exercise.name}
-      </h3>
-
-      {/* Top-right Buttons */}
+      {/* Title and Buttons Container */}
       <div
         style={{
-          position: "absolute",
-          top: "15px",
-          right: "15px",
           display: "flex",
           alignItems: "center",
+          justifyContent: "space-between",
           gap: "8px",
+          marginBottom: "15px",
         }}
       >
+        {/* Exercise Title */}
+        <h3
+          style={{
+            margin: 0,
+            color: "#fff",
+            fontSize: "18px",
+            flex: 1,
+            minWidth: 0, // Allow flex item to shrink below content size
+            wordWrap: "break-word",
+            overflowWrap: "break-word",
+            lineHeight: "1.5",
+          }}
+        >
+          {exercise.name}
+        </h3>
+
+        {/* Top-right Buttons */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "4px", // Reduced gap to bring buttons closer together
+            flexShrink: 0,
+          }}
+        >
         {/* Heart Icon */}
         <button
           onClick={toggleFavorite}
@@ -52,6 +64,12 @@ const ExerciseCard = ({ exercise }) => {
             cursor: "pointer",
             color: isFavorite ? "red" : "#aaa",
             fontSize: "22px",
+            padding: "0",
+            margin: "0",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            lineHeight: "1",
           }}
           aria-label="Favorite"
         >
@@ -62,16 +80,18 @@ const ExerciseCard = ({ exercise }) => {
         <button
           onClick={openModal}
           style={{
-            backgroundColor: "#666",
-            color: "#fff",
-            border: "none",
-            borderRadius: "4px",
-            padding: "5px 10px",
-            cursor: "pointer",
+          backgroundColor: "#1abc9c",
+          color: "#000",
+          border: "none",
+          borderRadius: "4px",
+          padding: "5px 10px",
+          cursor: "pointer",
+          fontWeight: "bold",
           }}
         >
           Info
         </button>
+        </div>
       </div>
 
       {/* Exercise GIF */}
@@ -138,15 +158,18 @@ const ExerciseCard = ({ exercise }) => {
               top: "50%",
               left: "50%",
               transform: "translate(-50%, -50%)",
-              backgroundColor: "#333",
+              background: "linear-gradient(135deg, #111, #0a0a0a)",
+              border: "2px solid #1abc9c",
               color: "#fff",
               padding: "25px",
-              borderRadius: "8px",
+              borderRadius: "16px",
               width: "90%",
               maxWidth: "500px",
               zIndex: 1001,
               maxHeight: "80vh",
               overflowY: "auto",
+              overflowX: "hidden",
+              boxSizing: "border-box",
             }}
           >
             <h2 style={{ marginTop: 0 }}>{exercise.name}</h2>
@@ -204,12 +227,13 @@ const ExerciseCard = ({ exercise }) => {
               onClick={closeModal}
               style={{
                 marginTop: "20px",
-                backgroundColor: "#666",
-                color: "#fff",
+                backgroundColor: "#1abc9c",
+                color: "#000",
                 border: "none",
                 padding: "8px 16px",
                 borderRadius: "4px",
                 cursor: "pointer",
+                fontWeight: "bold",
               }}
             >
               Close
