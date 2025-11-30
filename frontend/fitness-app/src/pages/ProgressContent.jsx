@@ -342,13 +342,14 @@ const ProgressContent = () => {
   return (
     <div style={{
       flex: 1,
+      minWidth: 0,
+      height: "100%",
       backgroundColor: "#333",
       color: "#fff",
       padding: "40px",
       overflowX: "hidden",
       overflowY: "auto",
-      boxSizing: "border-box",
-      maxWidth: "100%"
+      boxSizing: "border-box"
     }}>
       <div style={{ marginBottom: "30px" }}>
         <h1 style={{ marginBottom: "10px", fontSize: "34px" }}>🏋️ Your Progress</h1>

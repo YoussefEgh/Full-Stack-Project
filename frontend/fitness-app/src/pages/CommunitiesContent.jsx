@@ -215,14 +215,14 @@ function CommunitiesContent() {
     <div
       style={{
         flex: 1,
+        minWidth: 0,
+        height: "100%",
         backgroundColor: "#333",
         color: "#fff",
         padding: "40px",
-        minHeight: "100%",
-        boxSizing: "border-box",
         overflowX: "hidden",
         overflowY: "auto",
-        maxWidth: "100%",
+        boxSizing: "border-box"
       }}
     >
       <h1 style={{ marginBottom: "10px" }}>💬 Communities</h1>

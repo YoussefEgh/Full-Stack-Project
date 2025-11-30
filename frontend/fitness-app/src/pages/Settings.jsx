@@ -1,13 +1,39 @@
-import React, { useState } from "react";
-import { FiUser, FiCamera, FiSave, FiDownload, FiTrash2, FiSettings, FiShield } from "react-icons/fi";
+import React, { useState, useEffect } from "react";
+import { FiUser, FiCamera, FiSave, FiTrash2, FiShield } from "react-icons/fi";
+import { useAuth } from "../contexts/AuthContext";
 
 function Settings() {
-  const [username, setUsername] = useState("Username");
-  const [email, setEmail] = useState("user@example.com");
+  const { user, updateProfile, loading: authLoading } = useAuth();
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [profilePic, setProfilePic] = useState(null);
-  const [unit, setUnit] = useState("lb");
-  const [details, setDetails] = useState({ sex: "", weight: "", height: "" });
+  const [weight, setWeight] = useState("");
+  const [heightFeet, setHeightFeet] = useState("");
+  const [heightInches, setHeightInches] = useState("");
+  const [details, setDetails] = useState({ sex: "" });
   const [saving, setSaving] = useState(false);
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
+
+  // Load user data when component mounts or user changes
+  useEffect(() => {
+    if (user) {
+      setUsername(user.username || "");
+      setEmail(user.email || "");
+      if (user.profile_picture) {
+        setProfilePic(user.profile_picture);
+      }
+      if (user.weight) {
+        setWeight(user.weight.toString());
+      }
+      if (user.height_feet !== null && user.height_feet !== undefined) {
+        setHeightFeet(user.height_feet.toString());
+      }
+      if (user.height_inches !== null && user.height_inches !== undefined) {
+        setHeightInches(user.height_inches.toString());
+      }
+    }
+  }, [user]);
 
   const handleProfilePicChange = (e) => {
     const file = e.target.files[0];
@@ -19,21 +45,96 @@ function Settings() {
     setDetails({ ...details, [name]: value });
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
+    if (!user) {
+      setError("You must be logged in to save settings.");
+      return;
+    }
+
     setSaving(true);
-    setTimeout(() => {
-      alert("Settings saved successfully!");
+    setError(null);
+    setSuccess(null);
+
+    try {
+      const profileData = {
+        username: username,
+        // Note: email is read-only in the backend, so we don't send it
+      };
+
+      // Add weight if provided
+      if (weight && weight.trim() !== "") {
+        profileData.weight = parseFloat(weight);
+      }
+
+      // Add height if provided
+      if (heightFeet && heightFeet.trim() !== "") {
+        profileData.height_feet = parseInt(heightFeet);
+      }
+      if (heightInches && heightInches.trim() !== "") {
+        const inches = parseInt(heightInches);
+        // Ensure inches is between 0 and 11
+        if (inches >= 0 && inches <= 11) {
+          profileData.height_inches = inches;
+        } else {
+          setError("Inches must be between 0 and 11.");
+          setSaving(false);
+          return;
+        }
+      }
+
+      const result = await updateProfile(profileData);
+      
+      if (result.success) {
+        setSuccess("Settings saved successfully!");
+        setTimeout(() => setSuccess(null), 3000);
+      } else {
+        setError(result.error || "Failed to save settings. Please try again.");
+      }
+    } catch (err) {
+      setError(err.message || "An error occurred while saving settings.");
+    } finally {
       setSaving(false);
-    }, 1000);
+    }
   };
 
-  const handleExport = () => {
-    alert("Workout data exported successfully!");
-  };
+  const handleDelete = async () => {
+    if (!window.confirm("This will clear your sex, weight, and height data. Continue?")) {
+      return;
+    }
 
-  const handleDelete = () => {
-    if (window.confirm("This will permanently delete all your data. Continue?")) {
-      alert("All data deleted.");
+    if (!user) {
+      setError("You must be logged in to delete data.");
+      return;
+    }
+
+    setSaving(true);
+    setError(null);
+    setSuccess(null);
+
+    try {
+      const profileData = {
+        weight: null,
+        height_feet: null,
+        height_inches: null,
+      };
+
+      const result = await updateProfile(profileData);
+      
+      if (result.success) {
+        // Clear local state
+        setWeight("");
+        setHeightFeet("");
+        setHeightInches("");
+        setDetails({ sex: "" });
+        setSuccess("Personal data cleared successfully!");
+        setTimeout(() => setSuccess(null), 3000);
+      } else {
+        setError(result.error || "Failed to clear data. Please try again.");
+      }
+    } catch (err) {
+      setError(err.message || "An error occurred while clearing data.");
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -50,6 +151,40 @@ function Settings() {
         </div>
 
         <div style={contentWrapperStyle}>
+        {error && (
+          <div style={{
+            backgroundColor: "#e74c3c",
+            color: "#fff",
+            padding: "12px 16px",
+            borderRadius: "8px",
+            marginBottom: "20px",
+            fontSize: "14px"
+          }}>
+            {error}
+          </div>
+        )}
+        {success && (
+          <div style={{
+            backgroundColor: "#1abc9c",
+            color: "#fff",
+            padding: "12px 16px",
+            borderRadius: "8px",
+            marginBottom: "20px",
+            fontSize: "14px"
+          }}>
+            {success}
+          </div>
+        )}
+        {authLoading ? (
+          <div style={{ textAlign: "center", padding: "40px", color: "#888" }}>
+            Loading user data...
+          </div>
+        ) : !user ? (
+          <div style={{ textAlign: "center", padding: "40px", color: "#888" }}>
+            Please log in to view your settings.
+          </div>
+        ) : (
+          <>
         {/* Profile Section */}
         <section style={cardStyle}>
           <div style={sectionTitleStyle}>
@@ -96,11 +231,15 @@ function Settings() {
                 <input
                   type="email"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  readOnly
+                  disabled
                   className="settings-input"
-                  style={inputStyle}
+                  style={{ ...inputStyle, opacity: 0.6, cursor: "not-allowed" }}
                   placeholder="Enter your email"
                 />
+                <p style={{ fontSize: "12px", color: "#888", marginTop: "4px" }}>
+                  Email cannot be changed
+                </p>
               </div>
             </div>
           </div>
@@ -131,84 +270,73 @@ function Settings() {
             </div>
 
             <div style={formGroupStyle}>
-              <label style={labelStyle}>Weight ({unit})</label>
+              <label style={labelStyle}>Weight (lbs)</label>
               <input
                 type="number"
                 name="weight"
-                value={details.weight}
-                onChange={handleDetailChange}
+                value={weight}
+                onChange={(e) => setWeight(e.target.value)}
                 className="settings-input"
                 style={inputStyle}
                 placeholder="0"
+                step="0.1"
+                min="0"
               />
             </div>
 
             <div style={formGroupStyle}>
-              <label style={labelStyle}>Height (cm)</label>
-                <input
-                  type="number"
-                  name="height"
-                  value={details.height}
-                  onChange={handleDetailChange}
-                  className="settings-input"
-                  style={inputStyle}
-                  placeholder="0"
-                />
+              <label style={labelStyle}>Height (feet)</label>
+              <input
+                type="number"
+                name="height_feet"
+                value={heightFeet}
+                onChange={(e) => setHeightFeet(e.target.value)}
+                className="settings-input"
+                style={inputStyle}
+                placeholder="0"
+                min="0"
+                max="10"
+              />
             </div>
-          </div>
-        </section>
 
-        {/* Units Section */}
-        <section style={cardStyle}>
-          <div style={sectionTitleStyle}>
-            <FiSettings style={{ fontSize: "20px" }} />
-            <h2 style={{ margin: 0, marginLeft: "10px" }}>Units of Measurement</h2>
-          </div>
-
-          <div style={radioGroupStyle}>
-            <label className="settings-radio-label" style={radioLabelStyle}>
+            <div style={formGroupStyle}>
+              <label style={labelStyle}>Height (inches)</label>
               <input
-                type="radio"
-                name="unit"
-                value="kg"
-                checked={unit === "kg"}
-                onChange={() => setUnit("kg")}
-                style={radioInputStyle}
+                type="number"
+                name="height_inches"
+                value={heightInches}
+                onChange={(e) => setHeightInches(e.target.value)}
+                className="settings-input"
+                style={inputStyle}
+                placeholder="0"
+                min="0"
+                max="11"
               />
-              <span>Kilograms (kg)</span>
-            </label>
-            <label className="settings-radio-label" style={radioLabelStyle}>
-              <input
-                type="radio"
-                name="unit"
-                value="lb"
-                checked={unit === "lb"}
-                onChange={() => setUnit("lb")}
-                style={radioInputStyle}
-              />
-              <span>Pounds (lb)</span>
-            </label>
+            </div>
           </div>
         </section>
 
         {/* Data Management Section */}
         <section style={cardStyle}>
           <div style={sectionTitleStyle}>
-            <FiDownload style={{ fontSize: "20px" }} />
-            <h2 style={{ margin: 0, marginLeft: "10px" }}>Data Management</h2>
+            <FiTrash2 style={{ fontSize: "20px" }} />
+            <h2 style={{ margin: 0, marginLeft: "10px" }}>Clear Personal Data</h2>
           </div>
 
           <div style={buttonGroupStyle}>
-            <button className="settings-export-button" onClick={handleExport} style={exportButtonStyle}>
-              <FiDownload style={{ marginRight: "8px" }} />
-              Export Data
-            </button>
-            <button className="settings-delete-button" onClick={handleDelete} style={deleteButtonStyle}>
+            <button 
+              className="settings-delete-button" 
+              onClick={handleDelete} 
+              disabled={saving}
+              style={saving ? { ...deleteButtonStyle, opacity: 0.6 } : deleteButtonStyle}
+            >
               <FiTrash2 style={{ marginRight: "8px" }} />
-              Delete All Data
+              {saving ? "Clearing..." : "Clear Sex, Weight & Height"}
             </button>
           </div>
         </section>
+        </>
+        )}
       </div>
 
         {/* Save Button */}
@@ -232,10 +360,11 @@ function Settings() {
 // Styles
 const containerStyle = {
   flex: 1,
+  minWidth: 0,
   display: "flex",
   flexDirection: "column",
   backgroundColor: "#0a0a0a",
-  height: "100vh",
+  height: "100%",
   overflowY: "auto",
   scrollbarWidth: "none", /* Firefox */
   msOverflowStyle: "none", /* IE and Edge */
@@ -399,21 +528,6 @@ const buttonGroupStyle = {
   display: "flex",
   gap: "16px",
   flexWrap: "wrap",
-};
-
-const exportButtonStyle = {
-  display: "flex",
-  alignItems: "center",
-  padding: "12px 24px",
-  background: "linear-gradient(135deg, #3498db 0%, #2980b9 100%)",
-  border: "none",
-  borderRadius: "10px",
-  color: "#fff",
-  cursor: "pointer",
-  fontSize: "15px",
-  fontWeight: "500",
-  transition: "all 0.2s",
-  boxShadow: "0 2px 8px rgba(52, 152, 219, 0.3)",
 };
 
 const deleteButtonStyle = {

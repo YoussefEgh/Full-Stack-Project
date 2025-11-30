@@ -7,7 +7,7 @@ const WorkoutContent = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [filters, setFilters] = useState({
-    q: '', // general search query
+    q: 'bench', // general search query
     bodyPart: '',
     equipment: '',
     target: ''

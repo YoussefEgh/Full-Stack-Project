@@ -106,6 +106,7 @@ export default function Clusters() {
   const pageStyle = {
     display: "flex",
     height: "100vh",
+    width: "100vw",
     background: "#000",
     color: "#fff",
     overflow: "hidden",
@@ -113,6 +114,8 @@ export default function Clusters() {
 
   const contentStyle = {
     flex: 1,
+    minWidth: 0,
+    height: "100%",
     padding: "40px",
     overflowY: "auto",
   };

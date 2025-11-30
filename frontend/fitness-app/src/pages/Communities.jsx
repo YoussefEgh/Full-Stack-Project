@@ -8,7 +8,7 @@ function Communities() {
   const { id } = useParams();
   
   return (
-    <div className="Communities" style={{ display: "flex", height: "100vh", overflow: "hidden" }}>
+    <div className="Communities" style={{ display: "flex", height: "100vh", width: "100vw", overflow: "hidden" }}>
       <Sidebar />
       {id ? <PostDetail /> : <CommunitiesContent />}
     </div>

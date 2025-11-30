@@ -1,3 +1,27 @@
+# 🚀 Full-Stack Fitness Application
+
+## 📖 Setup Guide
+
+**New to the project? Start here!**
+
+👉 **[Click here for the COMPLETE SETUP GUIDE](./COMPLETE_SETUP_GUIDE.md)** 👈
+
+This comprehensive guide will walk you through:
+- Installing all prerequisites
+- Setting up Firebase (backend & frontend)
+- Configuring the Django backend
+- Setting up the React frontend
+- Avoiding common login errors
+- Troubleshooting tips
+
+**Quick Start:**
+1. Clone the repository: `git clone https://github.com/YoussefEgh/Full-Stack-Project.git`
+2. Follow the [Complete Setup Guide](./COMPLETE_SETUP_GUIDE.md)
+3. Run backend: `cd backend && source venv/bin/activate && python manage.py runserver`
+4. Run frontend: `cd frontend/fitness-app && npm run dev`
+
+---
+
 # Logistics  
 
 **Q1:** At what time in the week would your group be available to meet online?  
