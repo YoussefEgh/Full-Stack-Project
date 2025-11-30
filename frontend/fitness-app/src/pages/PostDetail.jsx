@@ -50,7 +50,7 @@ function PostDetail() {
       <div
         style={{
           flex: 1,
-          backgroundColor: "#333",
+          backgroundColor: "#000",
           color: "#fff",
           display: "flex",
           justifyContent: "center",
@@ -67,7 +67,7 @@ function PostDetail() {
       <div
         style={{
           flex: 1,
-          backgroundColor: "#333",
+          backgroundColor: "#000",
           color: "#fff",
           display: "flex",
           justifyContent: "center",
@@ -79,7 +79,7 @@ function PostDetail() {
         <button
           onClick={fetchPost}
           style={{
-            backgroundColor: "#00bfff",
+            backgroundColor: "#1abc9c",
             border: "none",
             borderRadius: "4px",
             padding: "8px 16px",
@@ -98,7 +98,7 @@ function PostDetail() {
       <div
         style={{
           flex: 1,
-          backgroundColor: "#333",
+          backgroundColor: "#000",
           color: "#fff",
           display: "flex",
           justifyContent: "center",
@@ -258,7 +258,7 @@ function PostDetail() {
       <button
         onClick={() => navigate("/communities")}
         style={{
-          backgroundColor: "#666",
+          backgroundColor: "#222",
           border: "none",
           borderRadius: "4px",
           padding: "6px 12px",
@@ -272,8 +272,8 @@ function PostDetail() {
 
       <div
         style={{
-          backgroundColor: "#444",
-          border: "1px solid #555",
+          backgroundColor: "#141414",
+          border: "1px solid #242424",
           borderRadius: "10px",
           padding: "25px",
           boxShadow: "0 0 10px rgba(0,0,0,0.5)",
@@ -316,7 +316,7 @@ function PostDetail() {
             display: "flex",
             alignItems: "center",
             gap: "6px",
-            color: post.liked ? "#00bfff" : "#aaa",
+            color: post.liked ? "#1abc9c" : "#aaa",
             cursor: "pointer",
             marginBottom: "20px",
           }}
@@ -329,8 +329,8 @@ function PostDetail() {
 
       <div
         style={{
-          backgroundColor: "#444",
-          border: "1px solid #555",
+          backgroundColor: "#141414",
+          border: "1px solid #242424",
           borderRadius: "10px",
           padding: "25px",
           boxShadow: "0 0 10px rgba(0,0,0,0.5)",
@@ -351,7 +351,8 @@ function PostDetail() {
               <div
                 key={reply.id}
                 style={{
-                  backgroundColor: "#555",
+                  backgroundColor: "#1a1a1a",
+                  border: "1px solid #333",
                   marginBottom: "10px",
                   padding: "15px",
                   borderRadius: "6px",
@@ -359,7 +360,7 @@ function PostDetail() {
               >
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start" }}>
                   <div style={{ flex: 1 }}>
-                    <strong style={{ color: "#00bfff" }}>{reply.user}</strong>:{" "}
+                    <strong style={{ color: "#1abc9c" }}>{reply.user}</strong>:{" "}
                     <span>{reply.text}</span>
                   </div>
                   {reply.user_uid === user?.uid && (
@@ -383,8 +384,7 @@ function PostDetail() {
             ))}
           </div>
         )}
-
-        <form onSubmit={handleReply}>
+        <form onSubmit={handleReply} style={{ width: "100%" }}>
           <textarea
             value={newReply}
             onChange={(e) => setNewReply(e.target.value)}
@@ -392,27 +392,28 @@ function PostDetail() {
             style={{
               width: "100%",
               minHeight: "80px",
-              backgroundColor: "#555",
-              border: "1px solid #666",
+              background: "linear-gradient(135deg, #1a1a1a, #141414)",
+              border: "1px solid #333",
               borderRadius: "6px",
-              padding: "10px",
+              padding: "15px",
               color: "#fff",
               fontSize: "14px",
               resize: "vertical",
-              marginBottom: "10px",
+              boxSizing: "border-box"
             }}
           />
           <button
             type="submit"
             disabled={!newReply.trim()}
             style={{
-              backgroundColor: newReply.trim() ? "#00bfff" : "#666",
+              backgroundColor: newReply.trim() ? "#1abc9c" : "#222",
               border: "none",
               borderRadius: "4px",
-              padding: "8px 16px",
+              padding: "10px 18px",
               color: "#fff",
               cursor: newReply.trim() ? "pointer" : "not-allowed",
               fontSize: "14px",
+              marginTop: "10px"
             }}
           >
             Post Reply

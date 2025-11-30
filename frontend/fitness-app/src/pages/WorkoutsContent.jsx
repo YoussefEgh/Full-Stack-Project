@@ -123,26 +123,32 @@ const WorkoutContent = () => {
 
   return (
     <div style={{ 
-      width: "100vw",            // full viewport width
-      overflowX: "hidden",       // prevent horizontal scrollbar
-      backgroundColor: "#333", 
+      flex: 1,
+      minWidth: 0,
+      height: "100%",
+      overflowX: "hidden",
+      overflowY: "auto",        // Enable vertical scrolling to edge
+      backgroundColor: "#000", 
       color: "#fff",
       padding: "45px 0",         // vertical padding only
-      boxSizing: "border-box"
+      boxSizing: "border-box",
+      maxWidth: "100%"
     }}>
       <h1 style={{ padding: "0 35px" }}>💪 Your Workouts </h1>
-      <h3 style={{ color: "#aaa", padding: "0 45px" }}>Browse exercises from ExerciseDB</h3>
+      <h3 style={{ color: "#aaa", padding: "0 45px" }}>Browse exercises from the ExerciseDB database!</h3>
 
       {/* Filter Controls */}
       <div style={{ 
         padding: "20px 35px", 
-        backgroundColor: "#444", 
-        margin: "20px 0",
-        borderRadius: "8px",
-        marginLeft: "20px",
-        marginRight: "20px"
+        background: "linear-gradient(135deg, #111, #0a0a0a)",
+        border: "1px solid #222",
+        margin: "20px 20px",
+        borderRadius: "16px",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center"
       }}>
-        <h4 style={{ marginBottom: "15px", color: "#fff" }}>Search & Filter Exercises</h4>
+        <h4 style={{ marginBottom: "15px", color: "#fff", marginTop: "0" }}>Search & Filter Exercises</h4>
         <div style={{ display: "flex", gap: "15px", flexWrap: "wrap", alignItems: "center" }}>
           <div>
             <label style={{ display: "block", marginBottom: "5px", fontSize: "14px" }}>Search:</label>
@@ -154,8 +160,8 @@ const WorkoutContent = () => {
               style={{
                 padding: "8px",
                 borderRadius: "4px",
-                border: "1px solid #666",
-                backgroundColor: "#555",
+                border: "1px solid #333",
+                backgroundColor: "#0a0a0a",
                 color: "#fff",
                 width: "200px"
               }}
@@ -171,8 +177,8 @@ const WorkoutContent = () => {
               style={{
                 padding: "8px",
                 borderRadius: "4px",
-                border: "1px solid #666",
-                backgroundColor: "#555",
+                border: "1px solid #333",
+                backgroundColor: "#0a0a0a",
                 color: "#fff",
                 width: "150px"
               }}
@@ -188,8 +194,8 @@ const WorkoutContent = () => {
               style={{
                 padding: "8px",
                 borderRadius: "4px",
-                border: "1px solid #666",
-                backgroundColor: "#555",
+                border: "1px solid #333",
+                backgroundColor: "#0a0a0a",
                 color: "#fff",
                 width: "150px"
               }}
@@ -205,8 +211,8 @@ const WorkoutContent = () => {
               style={{
                 padding: "8px",
                 borderRadius: "4px",
-                border: "1px solid #666",
-                backgroundColor: "#555",
+                border: "1px solid #333",
+                backgroundColor: "#0a0a0a",
                 color: "#fff",
                 width: "150px"
               }}
@@ -216,12 +222,13 @@ const WorkoutContent = () => {
             onClick={clearFilters}
             style={{
               padding: "8px 16px",
-              backgroundColor: "#666",
-              color: "#fff",
+              backgroundColor: "#1abc9c",
+              color: "#000",
               border: "none",
               borderRadius: "4px",
               cursor: "pointer",
-              marginTop: "20px"
+              marginTop: "20px",
+              fontWeight: "bold"
             }}
           >
             Clear Filters
@@ -241,7 +248,7 @@ const WorkoutContent = () => {
           <FiLoader 
             style={{
               fontSize: "48px",
-              color: "#00bfff",
+              color: "#1abc9c",
               animation: "spin 1s linear infinite",
             }}
           />
@@ -270,7 +277,9 @@ const WorkoutContent = () => {
         gap: "20px", 
         marginTop: "20px",
         padding: "0 20px",
-        width: "75vw"
+        width: "100%",
+        maxWidth: "100%",
+        boxSizing: "border-box"
       }}>
         {exercises.map((exercise) => (
           <ExerciseCard

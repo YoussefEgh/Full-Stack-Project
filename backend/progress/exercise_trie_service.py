@@ -12,6 +12,23 @@ TRIE_LAST_UPDATED = None
 TRIE_LOCK = threading.Lock()  # Thread lock for thread-safe operations
 TRIE_UPDATE_INTERVAL = timedelta(hours=24)  # Update trie once per day
 
+# Custom exercises to always include in autocomplete
+CUSTOM_EXERCISES = [
+    "machine chest press",
+    "machine chest fly",
+    "machine dip",
+    "machine shoulder press",
+    "single-arm cable lateral raise",
+    "tricep pushdown",
+    "tricep overhead extension",
+    "lat pulldown",
+    "t-bar row",
+    "single-arm cable row",
+    "machine rear delt fly",
+    "barbell curl",  # Assuming "bayesian curl" was meant to be "barbell curl"
+    "preacher curl",
+]
+
 
 def fetch_all_exercises_from_api():
     """
@@ -25,21 +42,18 @@ def fetch_all_exercises_from_api():
         # The API returns exercises in a list format
         api_url = "https://www.exercisedb.dev/api/v1/exercises"
         
-        # Try to fetch all exercises
-        response = requests.get(api_url, timeout=30)
-        response.raise_for_status()
-        data = response.json()
-        
         # Extract exercise names
         # The API returns: {"success": true, "data": [...], "metadata": {...}}
         # The API uses pagination, so we need to fetch multiple pages
         exercise_names = []
         seen_names = set()  # To avoid duplicates
         offset = 0
-        limit = 50  # Fetch 50 at a time to avoid rate limiting
-        max_pages = 10  # Limit to prevent infinite loops (500 exercises max)
+        limit = 100  # Fetch 100 at a time to reduce API calls
         page = 0
+        max_pages = 200  # Safety limit (20,000 exercises max) - should be more than enough
         import time
+        
+        print(f"Starting to fetch exercises from ExerciseDB API...")
         
         while page < max_pages:
             # Fetch a page of exercises
@@ -77,13 +91,28 @@ def fetch_all_exercises_from_api():
                 
                 # Check if there are more pages
                 next_page = metadata.get('nextPage')
-                if not next_page or not exercises:
+                total_count = metadata.get('totalCount', 0)
+                
+                # If we got no exercises, we've reached the end
+                if len(exercises) == 0:
+                    print(f"Reached end of pagination (no exercises returned). Total fetched: {len(exercise_names)}")
+                    break
+                
+                # Check if there are more pages to fetch
+                # Continue if: (1) we got a full page (limit) OR (2) nextPage exists
+                # Stop if: we got fewer than limit AND no nextPage
+                if len(exercises) < limit and not next_page:
+                    print(f"Reached end of pagination (got {len(exercises)} exercises, no nextPage). Total fetched: {len(exercise_names)}")
                     break
                 
                 offset += limit
                 page += 1
                 # Small delay to avoid rate limiting
                 time.sleep(0.5)
+                
+                # Log progress every 10 pages
+                if page % 10 == 0:
+                    print(f"Fetched {page} pages, {len(exercise_names)} exercises so far...")
             elif isinstance(data, list):
                 # If API returns a list directly
                 for exercise in data:
@@ -96,7 +125,9 @@ def fetch_all_exercises_from_api():
             else:
                 break
         
-        print(f"Fetched {len(exercise_names)} unique exercises from ExerciseDB API (across {page + 1} pages)")
+        print(f"✅ Fetched {len(exercise_names)} unique exercises from ExerciseDB API (across {page + 1} pages)")
+        if page >= max_pages - 1:
+            print(f"⚠️ Warning: Hit max_pages limit ({max_pages}). There may be more exercises available.")
         return exercise_names
         
     except requests.exceptions.RequestException as e:
@@ -133,6 +164,18 @@ def build_exercise_trie(force_rebuild=False):
         
         # Fetch exercises from API
         exercise_names = fetch_all_exercises_from_api()
+        
+        # Add custom exercises to the list (avoid duplicates)
+        seen_names = {name.lower() for name in exercise_names}
+        custom_added = 0
+        for custom_ex in CUSTOM_EXERCISES:
+            if custom_ex.lower() not in seen_names:
+                exercise_names.append(custom_ex)
+                seen_names.add(custom_ex.lower())
+                custom_added += 1
+        
+        if custom_added > 0:
+            print(f"Added {custom_added} custom exercises to the list")
         
         if not exercise_names:
             print("⚠️ No exercises fetched from API!")

@@ -143,7 +143,7 @@ function CommunitiesContent() {
       <div
         style={{
           flex: 1,
-          backgroundColor: "#333",
+          backgroundColor: "#000",
           color: "#fff",
           padding: "40px",
           display: "flex",
@@ -158,7 +158,7 @@ function CommunitiesContent() {
         <FiLoader 
           style={{
             fontSize: "48px",
-            color: "#00bfff",
+              color: "#1abc9c",
             animation: "spin 1s linear infinite",
           }}
         />
@@ -184,7 +184,7 @@ function CommunitiesContent() {
       <div
         style={{
           flex: 1,
-          backgroundColor: "#333",
+          backgroundColor: "#000",
           color: "#fff",
           padding: "40px",
           display: "flex",
@@ -194,15 +194,16 @@ function CommunitiesContent() {
         }}
       >
         <p style={{ color: "#ff6b6b", marginBottom: "20px" }}>Error: {error}</p>
-        <button
+          <button
           onClick={fetchPosts}
           style={{
-            backgroundColor: "#00bfff",
+                    backgroundColor: "#1abc9c",
             border: "none",
             borderRadius: "4px",
             padding: "8px 16px",
-            color: "#fff",
+            color: "#000",
             cursor: "pointer",
+            fontWeight: "bold",
           }}
         >
           Retry
@@ -217,7 +218,7 @@ function CommunitiesContent() {
         flex: 1,
         minWidth: 0,
         height: "100%",
-        backgroundColor: "#333",
+        backgroundColor: "#000",
         color: "#fff",
         padding: "40px",
         overflowX: "hidden",
@@ -236,7 +237,7 @@ function CommunitiesContent() {
         <button
           onClick={() => setSortBy("date")}
           style={{
-            backgroundColor: sortBy === "date" ? "#00bfff" : "#666",
+            backgroundColor: sortBy === "date" ? "#1abc9c" : "#222",
             border: "none",
             borderRadius: "20px",
             padding: "8px 16px",
@@ -252,7 +253,7 @@ function CommunitiesContent() {
         <button
           onClick={() => setSortBy("likes")}
           style={{
-            backgroundColor: sortBy === "likes" ? "#00bfff" : "#666",
+            backgroundColor: sortBy === "likes" ? "#1abc9c" : "#222",
             border: "none",
             borderRadius: "20px",
             padding: "8px 16px",
@@ -268,7 +269,7 @@ function CommunitiesContent() {
         <button
           onClick={() => setShowCreateModal(true)}
           style={{
-            backgroundColor: "#00d26a",
+            backgroundColor: "#1abc9c",
             border: "none",
             borderRadius: "20px",
             padding: "8px 16px",
@@ -290,8 +291,8 @@ function CommunitiesContent() {
             key={post.id}
             onClick={() => navigate(`/post/${post.id}`, { state: { post } })}
             style={{
-              backgroundColor: "#444",
-              border: "1px solid #555",
+              backgroundColor: "#141414",
+              border: "1px solid #242424",
               borderRadius: "10px",
               padding: "20px",
               boxShadow: "0 0 10px rgba(0,0,0,0.4)",
@@ -319,7 +320,7 @@ function CommunitiesContent() {
               <h3 style={{ margin: 0, wordWrap: "break-word", overflowWrap: "break-word", flex: "1 1 auto", minWidth: 0 }}>{post.title}</h3>
               <span
                 style={{
-                  backgroundColor: "#666",
+                  backgroundColor: "#222",
                   borderRadius: "20px",
                   padding: "5px 10px",
                   fontSize: "12px",
@@ -349,7 +350,7 @@ function CommunitiesContent() {
                 display: "flex",
                 alignItems: "center",
                 gap: "6px",
-                color: post.liked ? "#00bfff" : "#aaa",
+                color: post.liked ? "#1abc9c" : "#aaa",
                 cursor: "pointer",
                 transition: "color 0.2s"
               }}
@@ -390,8 +391,8 @@ function CommunitiesContent() {
         >
           <div
             style={{
-              backgroundColor: "#444",
-              border: "2px solid #00bfff",
+              background: "linear-gradient(135deg, #111, #0a0a0a)",
+              border: "2px solid #1abc9c",
               borderRadius: "15px",
               padding: "30px",
               width: "90%",
@@ -438,8 +439,8 @@ function CommunitiesContent() {
                   }
                   style={{
                     width: "100%",
-                    backgroundColor: "#555",
-                    border: "1px solid #666",
+                    backgroundColor: "#0a0a0a",
+                    border: "1px solid #333",
                     borderRadius: "5px",
                     padding: "10px",
                     color: "#fff",
@@ -468,8 +469,8 @@ function CommunitiesContent() {
                   }
                   style={{
                     width: "100%",
-                    backgroundColor: "#555",
-                    border: "1px solid #666",
+                    backgroundColor: "#0a0a0a",
+                    border: "1px solid #333",
                     borderRadius: "5px",
                     padding: "10px",
                     color: "#fff",
@@ -503,8 +504,8 @@ function CommunitiesContent() {
                   style={{
                     width: "100%",
                     minHeight: "150px",
-                    backgroundColor: "#555",
-                    border: "1px solid #666",
+                    backgroundColor: "#0a0a0a",
+                    border: "1px solid #333",
                     borderRadius: "5px",
                     padding: "10px",
                     color: "#fff",
@@ -532,7 +533,7 @@ function CommunitiesContent() {
                   }}
                   disabled={creating}
                   style={{
-                    backgroundColor: "#666",
+                    backgroundColor: "#222",
                     border: "none",
                     borderRadius: "5px",
                     padding: "10px 20px",
@@ -549,8 +550,8 @@ function CommunitiesContent() {
                   style={{
                     backgroundColor: 
                       creating || !newPost.title.trim() || !newPost.content.trim()
-                        ? "#666"
-                        : "#00d26a",
+                        ? "#222"
+                        : "#1abc9c",
                     border: "none",
                     borderRadius: "5px",
                     padding: "10px 20px",
