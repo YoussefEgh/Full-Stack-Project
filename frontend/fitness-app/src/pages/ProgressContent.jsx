@@ -364,8 +364,8 @@ const ProgressContent = () => {
       boxSizing: "border-box"
     }}>
       <div style={{ marginBottom: "30px" }}>
-        <h1 style={{ marginBottom: "10px", fontSize: "34px" }}>🏋️ Your Progress</h1>
-        <p style={{ color: "#aaa", marginBottom: "20px" }}>
+        <h1 style={{ marginBottom: "10px" }}>🏋️ Your Progress</h1>
+        <p style={{ marginBottom: "20px", color: "#ccc" }}>
           Track your workouts by day and see your progress over time.
         </p>
         <button
@@ -421,7 +421,7 @@ const ProgressContent = () => {
               key={day.id}
               style={{
                 background: "linear-gradient(135deg, #111, #0a0a0a)",
-                border: "1px solid #222",
+                border: "2px solid #1abc9c",
                 borderRadius: "12px",
                 padding: "24px",
                 boxShadow: "0 4px 12px rgba(0,0,0,0.3)"
@@ -456,9 +456,10 @@ const ProgressContent = () => {
                       border: "none",
                       borderRadius: "6px",
                       padding: "8px 16px",
-                      color: "#fff",
+                      color: "#000",
                       cursor: "pointer",
-                      fontSize: "14px"
+                      fontSize: "14px",
+                      fontWeight: "bold"
                     }}
                   >
                     ➕ Add Exercise
@@ -718,7 +719,7 @@ const ProgressContent = () => {
           <div
             style={{
               background: "linear-gradient(135deg, #111, #0a0a0a)",
-          border: "1px solid #222",
+              border: "2px solid #1abc9c",
               borderRadius: "12px",
               padding: "30px",
               width: "90%",
@@ -859,8 +860,8 @@ const ProgressContent = () => {
                       width: "100%",
                       padding: "10px",
                       borderRadius: "6px",
-                      border: "1px solid #666",
-                      backgroundColor: "#555",
+                      border: "1px solid #333",
+                      backgroundColor: "#0a0a0a",
                       color: "#fff",
                       fontSize: "16px",
                       boxSizing: "border-box"
@@ -882,8 +883,8 @@ const ProgressContent = () => {
                       width: "100%",
                       padding: "10px",
                       borderRadius: "6px",
-                      border: "1px solid #666",
-                      backgroundColor: "#555",
+                      border: "1px solid #333",
+                      backgroundColor: "#0a0a0a",
                       color: "#fff",
                       fontSize: "16px",
                       boxSizing: "border-box"
@@ -906,8 +907,8 @@ const ProgressContent = () => {
                       width: "100%",
                       padding: "10px",
                       borderRadius: "6px",
-                      border: "1px solid #666",
-                      backgroundColor: "#555",
+                      border: "1px solid #333",
+                      backgroundColor: "#0a0a0a",
                       color: "#fff",
                       fontSize: "16px",
                       boxSizing: "border-box"
@@ -928,13 +929,14 @@ const ProgressContent = () => {
                     setHasSearched(false);
                   }}
                   style={{
-                    backgroundColor: "#666",
+                    backgroundColor: "#ff6b6b",
                     border: "none",
                     borderRadius: "6px",
                     padding: "10px 20px",
                     color: "#fff",
                     cursor: "pointer",
-                    fontSize: "14px"
+                    fontSize: "14px",
+                    fontWeight: "bold"
                   }}
                 >
                   Cancel
@@ -942,11 +944,11 @@ const ProgressContent = () => {
                 <button
                   type="submit"
                   style={{
-                    backgroundColor: "#4caf50",
+                    backgroundColor: "#1abc9c",
                     border: "none",
                     borderRadius: "6px",
                     padding: "10px 20px",
-                    color: "#fff",
+                    color: "#000",
                     cursor: "pointer",
                     fontSize: "14px",
                     fontWeight: "bold"

@@ -134,14 +134,16 @@ const WorkoutContent = () => {
       boxSizing: "border-box",
       maxWidth: "100%"
     }}>
-      <h1 style={{ padding: "0 35px" }}>💪 Your Workouts </h1>
-      <h3 style={{ color: "#aaa", padding: "0 45px" }}>Browse exercises from the ExerciseDB database!</h3>
+      <h1 style={{ marginBottom: "10px", padding: "0 35px" }}>💪 Your Workouts</h1>
+      <p style={{ marginBottom: "20px", color: "#ccc", padding: "0 35px" }}>
+        Browse exercises from the ExerciseDB database!
+      </p>
 
       {/* Filter Controls */}
       <div style={{ 
         padding: "20px 35px", 
         background: "linear-gradient(135deg, #111, #0a0a0a)",
-        border: "1px solid #222",
+        border: "2px solid #1abc9c",
         margin: "20px 20px",
         borderRadius: "16px",
         display: "flex",

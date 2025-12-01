@@ -235,7 +235,7 @@ function PostDetail() {
     <div
       style={{
         flex: 1,
-        backgroundColor: "#333",
+        backgroundColor: "#000",
         color: "#fff",
         overflowY: "auto",
         overflowX: "hidden",
@@ -273,7 +273,7 @@ function PostDetail() {
       <div
         style={{
           backgroundColor: "#141414",
-          border: "1px solid #242424",
+          border: "2px solid #1abc9c",
           borderRadius: "10px",
           padding: "25px",
           boxShadow: "0 0 10px rgba(0,0,0,0.5)",
@@ -330,7 +330,7 @@ function PostDetail() {
       <div
         style={{
           backgroundColor: "#141414",
-          border: "1px solid #242424",
+          border: "2px solid #1abc9c",
           borderRadius: "10px",
           padding: "25px",
           boxShadow: "0 0 10px rgba(0,0,0,0.5)",
@@ -341,7 +341,7 @@ function PostDetail() {
           overflowWrap: "break-word",
         }}
       >
-        <h3 style={{ marginBottom: "15px", color: "#00bfff" }}>Replies ({post.replies.length})</h3>
+        <h3 style={{ marginBottom: "15px", color: "#1abc9c" }}>Replies ({post.replies.length})</h3>
         
         {post.replies.length === 0 ? (
           <p style={{ color: "#aaa", marginBottom: "20px" }}>No replies yet. Be the first to comment!</p>
@@ -384,7 +384,8 @@ function PostDetail() {
             ))}
           </div>
         )}
-        <form onSubmit={handleReply} style={{ width: "100%" }}>
+
+        <form onSubmit={handleReply}>
           <textarea
             value={newReply}
             onChange={(e) => setNewReply(e.target.value)}
@@ -392,14 +393,15 @@ function PostDetail() {
             style={{
               width: "100%",
               minHeight: "80px",
-              background: "linear-gradient(135deg, #1a1a1a, #141414)",
+              backgroundColor: "#0a0a0a",
               border: "1px solid #333",
               borderRadius: "6px",
-              padding: "15px",
+              padding: "10px",
               color: "#fff",
               fontSize: "14px",
               resize: "vertical",
-              boxSizing: "border-box"
+              marginBottom: "10px",
+              boxSizing: "border-box",
             }}
           />
           <button
@@ -409,11 +411,11 @@ function PostDetail() {
               backgroundColor: newReply.trim() ? "#1abc9c" : "#222",
               border: "none",
               borderRadius: "4px",
-              padding: "10px 18px",
-              color: "#fff",
+              padding: "8px 16px",
+              color: newReply.trim() ? "#000" : "#fff",
+              fontWeight: newReply.trim() ? "bold" : "normal",
               cursor: newReply.trim() ? "pointer" : "not-allowed",
               fontSize: "14px",
-              marginTop: "10px"
             }}
           >
             Post Reply

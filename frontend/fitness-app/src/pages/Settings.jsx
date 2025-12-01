@@ -146,7 +146,7 @@ function Settings() {
         <div style={headerStyle}>
           <h1 style={{ margin: 0, fontSize: "32px", fontWeight: "600" }}>Settings</h1>
           <p style={{ margin: "8px 0 0 0", color: "#888", fontSize: "14px" }}>
-            Manage your account and preferences
+            Manage your account and preferences.
           </p>
         </div>
 

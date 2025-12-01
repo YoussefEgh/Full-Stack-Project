@@ -131,7 +131,7 @@ export default function Clusters() {
 
   const cardStyle = {
     background: "linear-gradient(135deg, #111, #0a0a0a)",
-    border: "1px solid #222",
+    border: "2px solid #1abc9c",
     borderRadius: "16px",
     padding: "24px",
     marginBottom: "30px",
@@ -160,8 +160,8 @@ export default function Clusters() {
       <Sidebar />
 
       <div style={contentStyle}>
-        <h1 style={{ fontSize: "34px", marginBottom: "6px" }}>🌐 Fitness Clusters</h1>
-        <p style={{ color: "#aaa", marginBottom: "30px" }}>
+        <h1 style={{ marginBottom: "10px" }}>🌐 Clusters</h1>
+        <p style={{ marginBottom: "20px", color: "#ccc" }}>
           Automatically generated based on your engagement across posts & replies.
         </p>
 

@@ -27,6 +27,10 @@ CUSTOM_EXERCISES = [
     "machine rear delt fly",
     "barbell curl",  # Assuming "bayesian curl" was meant to be "barbell curl"
     "preacher curl",
+    "cable glute kickback",
+    "cable step-up",
+    "smith machine hip thrust",
+    "smith machine rdl",
 ]
 
 

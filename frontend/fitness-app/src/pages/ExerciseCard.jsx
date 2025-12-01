@@ -13,7 +13,7 @@ const ExerciseCard = ({ exercise }) => {
     <div
       style={{
         background: "linear-gradient(135deg, #111, #0a0a0a)",
-        border: "1px solid #222",
+        border: "2px solid #1abc9c",
         borderRadius: "14px",
         padding: "20px",
         color: "#fff",
@@ -159,7 +159,7 @@ const ExerciseCard = ({ exercise }) => {
               left: "50%",
               transform: "translate(-50%, -50%)",
               background: "linear-gradient(135deg, #111, #0a0a0a)",
-              border: "1px solid #222",
+              border: "2px solid #1abc9c",
               color: "#fff",
               padding: "25px",
               borderRadius: "16px",
@@ -168,6 +168,8 @@ const ExerciseCard = ({ exercise }) => {
               zIndex: 1001,
               maxHeight: "80vh",
               overflowY: "auto",
+              overflowX: "hidden",
+              boxSizing: "border-box",
             }}
           >
             <h2 style={{ marginTop: 0 }}>{exercise.name}</h2>

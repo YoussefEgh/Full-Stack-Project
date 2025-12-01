@@ -292,7 +292,7 @@ function CommunitiesContent() {
             onClick={() => navigate(`/post/${post.id}`, { state: { post } })}
             style={{
               backgroundColor: "#141414",
-              border: "1px solid #242424",
+              border: "2px solid #1abc9c",
               borderRadius: "10px",
               padding: "20px",
               boxShadow: "0 0 10px rgba(0,0,0,0.4)",
@@ -401,7 +401,7 @@ function CommunitiesContent() {
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            <h2 style={{ marginBottom: "20px", color: "#00bfff" }}>
+            <h2 style={{ marginBottom: "20px", color: "#1abc9c" }}>
               Create New Post
             </h2>
 
@@ -445,6 +445,7 @@ function CommunitiesContent() {
                     padding: "10px",
                     color: "#fff",
                     fontSize: "14px",
+                    boxSizing: "border-box",
                   }}
                   placeholder="Enter post title..."
                   disabled={creating}
@@ -473,8 +474,18 @@ function CommunitiesContent() {
                     border: "1px solid #333",
                     borderRadius: "5px",
                     padding: "10px",
+                    paddingLeft: "10px",
+                    paddingRight: "40px",
                     color: "#fff",
                     fontSize: "14px",
+                    boxSizing: "border-box",
+                    appearance: "none",
+                    WebkitAppearance: "none",
+                    MozAppearance: "none",
+                    backgroundImage: `url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e")`,
+                    backgroundRepeat: "no-repeat",
+                    backgroundPosition: "right 10px center",
+                    backgroundSize: "16px",
                   }}
                   disabled={creating}
                 >
@@ -511,6 +522,7 @@ function CommunitiesContent() {
                     color: "#fff",
                     fontSize: "14px",
                     resize: "vertical",
+                    boxSizing: "border-box",
                   }}
                   placeholder="Write your post content..."
                   disabled={creating}
@@ -555,7 +567,7 @@ function CommunitiesContent() {
                     border: "none",
                     borderRadius: "5px",
                     padding: "10px 20px",
-                    color: "#fff",
+                    color: creating || !newPost.title.trim() || !newPost.content.trim() ? "#fff" : "#000",
                     cursor: 
                       creating || !newPost.title.trim() || !newPost.content.trim()
                         ? "not-allowed"
